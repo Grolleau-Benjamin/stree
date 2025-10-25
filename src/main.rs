@@ -1,3 +1,5 @@
+mod cli;
+
 fn main() {
-    println!("Hello, world!");
+    println!("{}", cli::get_hello());
 }
