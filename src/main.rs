@@ -1,5 +1,5 @@
-mod cli;
+use stree::cli::args;
 
 fn main() {
-    println!("{}", cli::get_hello());
+    println!("{}", args::get_hello());
 }
