@@ -53,6 +53,10 @@ impl Node {
             children: Some(children),
         }
     }
+
+    pub fn children_slice(&self) -> &[Node] {
+        self.children.as_deref().unwrap_or(&[])
+    }
 }
 
 #[cfg(test)]
