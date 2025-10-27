@@ -57,10 +57,10 @@ impl AppConfig {
         if raw.json && raw.count {
             return Err(String::from("--json and --count are mutually exclusive"));
         }
-        if let Some(d) = raw.depth {
-            if d == 0 {
-                return Err(String::from("--depth must be >= 1 when provided"));
-            }
+        if let Some(d) = raw.depth
+            && d == 0
+        {
+            return Err(String::from("--depth must be >= 1 when provided"));
         }
 
         let output = if raw.json {
