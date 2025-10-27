@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -19,7 +20,15 @@ jobs:
           override: true
           components: clippy
           profile: minimal
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Lint with Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
       - name: Install dependencies
         run: cargo install --path .
+
       - name: Run tests
         run: cargo test

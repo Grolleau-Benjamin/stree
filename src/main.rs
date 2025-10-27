@@ -8,6 +8,6 @@ fn main() {
     if let Ok(node) = walk::walk_path(&current_dir) {
         stdout::render(&node);
     } else {
-        println!("❌ - failed to execute STree on this directory.");
+        println!("❌ - failed to execute STree on this directory!");
     }
 }
