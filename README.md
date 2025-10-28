@@ -51,7 +51,7 @@ cargo run -- --help
 
 ### 🧭 Current state
 
-STree is currently in active development.  
+STree is currently in active development.
 All CLI options are **planned**, but some are not yet implemented.
 
 | Option | Status | Description |
