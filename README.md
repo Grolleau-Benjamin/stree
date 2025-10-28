@@ -69,7 +69,7 @@ All CLI options are **planned**, but some are not yet implemented.
 | `--json` | 🕓 Planned | Output the tree as a JSON structure |
 | `--count` | 🕓 Planned | Print only the number of files and directories |
 | `--time` | 🕓 Planned | Measure and display execution time |
-| `--verbose` | 🕓 Planned | Enable detailed logging |
+| `--verbose` | ✅ Completed | Enable detailed logging |
 
 ## 👥 Contributors
 
