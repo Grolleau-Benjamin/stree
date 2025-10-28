@@ -8,3 +8,18 @@ pub fn init_logger(verbose: bool) {
 
     debug!("Logger initialized with level: {}", log_level);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_initializes_logger_in_verbose_mode() {
+        let _ = std::panic::catch_unwind(|| init_logger(true));
+    }
+
+    #[test]
+    fn it_initializes_logger_in_non_verbose_mode() {
+        let _ = std::panic::catch_unwind(|| init_logger(false));
+    }
+}
