@@ -97,3 +97,115 @@ impl AppConfig {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::cli::args::{Args, ColorMode};
+    use clap::Parser;
+
+    #[test]
+    fn conflict_dirs_only_and_files_only() {
+        let args = Args::try_parse_from(["stree", "--dirs-only", "--files-only"]).unwrap();
+        let err = AppConfig::from_raw(args).unwrap_err();
+        assert!(err.contains("mutually exclusive"));
+    }
+
+    #[test]
+    fn conflict_json_and_count() {
+        let args = Args::try_parse_from(["stree", "--json", "--count"]).unwrap();
+        let err = AppConfig::from_raw(args).unwrap_err();
+        assert!(err.contains("mutually exclusive"));
+    }
+
+    #[test]
+    fn depth_zero_is_rejected() {
+        let args = Args::try_parse_from(["stree", "--depth", "0"]).unwrap();
+        let err = AppConfig::from_raw(args).unwrap_err();
+        assert!(err.contains("--depth must be >= 1"));
+    }
+
+    #[test]
+    fn defaults_map_to_stdout_mode() {
+        let args = Args::try_parse_from(["stree"]).unwrap();
+        let cfg = AppConfig::from_raw(args).unwrap();
+
+        assert!(matches!(cfg.output, OutputMode::STDOUT));
+
+        assert_eq!(cfg.walk.follow_gitignore, false);
+        assert_eq!(cfg.walk.include_hidden, false);
+        assert!(cfg.walk.depth.is_none());
+        assert_eq!(cfg.walk.dirs_only, false);
+        assert_eq!(cfg.walk.files_only, false);
+        assert_eq!(cfg.walk.prune_empty, false);
+
+        assert_eq!(cfg.render.color, ColorMode::AUTO);
+        assert_eq!(cfg.render.icons, false);
+
+        assert_eq!(cfg.git.enabled, false);
+        assert_eq!(cfg.git.show_branch, false);
+
+        assert_eq!(cfg.runtime.measure_time, false);
+        assert_eq!(cfg.runtime.verbose, false);
+        assert_eq!(cfg.runtime.root, PathBuf::from("."));
+    }
+
+    #[test]
+    fn maps_flags_to_config_correctly() {
+        let args = Args::try_parse_from([
+            "stree",
+            // Walk
+            "--gitignore",
+            "--hidden-files",
+            "--depth",
+            "3",
+            "--dirs-only",
+            "--prune-empty",
+            // Render
+            "--color",
+            "never",
+            "--icons",
+            // Git
+            "--git",
+            "--git-branch",
+            // Runtime
+            "--time",
+            "--verbose",
+            // Root
+            "root_dir",
+        ])
+        .unwrap();
+
+        let cfg = AppConfig::from_raw(args).unwrap();
+
+        assert!(cfg.walk.follow_gitignore);
+        assert!(cfg.walk.include_hidden);
+        assert_eq!(cfg.walk.depth, Some(3));
+        assert!(cfg.walk.dirs_only);
+        assert!(!cfg.walk.files_only);
+        assert!(cfg.walk.prune_empty);
+
+        assert_eq!(cfg.render.color, ColorMode::NEVER);
+        assert!(cfg.render.icons);
+
+        assert!(cfg.git.enabled);
+        assert!(cfg.git.show_branch);
+
+        assert!(matches!(cfg.output, OutputMode::STDOUT));
+
+        assert!(cfg.runtime.measure_time);
+        assert!(cfg.runtime.verbose);
+        assert_eq!(cfg.runtime.root, PathBuf::from("root_dir"));
+    }
+
+    #[test]
+    fn selects_output_modes_json_and_count() {
+        let args_json = Args::try_parse_from(["stree", "--json"]).unwrap();
+        let cfg_json = AppConfig::from_raw(args_json).unwrap();
+        assert!(matches!(cfg_json.output, OutputMode::JSON));
+
+        let args_count = Args::try_parse_from(["stree", "--count"]).unwrap();
+        let cfg_count = AppConfig::from_raw(args_count).unwrap();
+        assert!(matches!(cfg_count.output, OutputMode::COUNT));
+    }
+}
