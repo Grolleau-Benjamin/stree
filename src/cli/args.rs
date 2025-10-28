@@ -1,7 +1,7 @@
 use crate::config;
 use clap::{Parser, ValueEnum};
 
-#[derive(Copy, Clone, Debug, ValueEnum)]
+#[derive(Copy, Clone, Debug, ValueEnum, PartialEq)]
 pub enum ColorMode {
     AUTO,
     ALWAYS,
@@ -110,5 +110,172 @@ pub struct Args {
 impl Args {
     pub fn build_config(self) -> Result<config::AppConfig, String> {
         config::AppConfig::from_raw(self)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use clap::Parser;
+
+    #[test]
+    fn defaults_are_correct() {
+        let args = Args::try_parse_from(["stree"]).unwrap();
+        assert_eq!(args.root, ".");
+        assert!(!args.gitignore);
+        assert!(!args.hidden_files);
+        assert_eq!(args.color, ColorMode::AUTO);
+        assert!(!args.icons);
+        assert!(args.depth.is_none());
+        assert!(!args.dirs_only);
+        assert!(!args.files_only);
+        assert!(!args.prune_empty);
+        assert!(!args.git);
+        assert!(!args.git_branch);
+        assert!(!args.json);
+        assert!(!args.count);
+        assert!(!args.time);
+        assert!(!args.verbose);
+    }
+
+    #[test]
+    fn root_positional_is_parsed() {
+        let args = Args::try_parse_from(["stree", "/home/vatara"]).unwrap();
+        assert_eq!(args.root, "/home/vatara");
+    }
+
+    #[test]
+    fn gitignore_flag() {
+        let args = Args::try_parse_from(["stree", "--gitignore"]).unwrap();
+        assert!(args.gitignore);
+    }
+
+    #[test]
+    fn hidden_files_flag() {
+        let args = Args::try_parse_from(["stree", "--hidden-files"]).unwrap();
+        assert!(args.hidden_files);
+    }
+
+    #[test]
+    fn color_variants_parse() {
+        let a = Args::try_parse_from(["stree", "--color", "auto"]).unwrap();
+        assert_eq!(a.color, ColorMode::AUTO);
+
+        let b = Args::try_parse_from(["stree", "--color", "always"]).unwrap();
+        assert_eq!(b.color, ColorMode::ALWAYS);
+
+        let c = Args::try_parse_from(["stree", "--color", "never"]).unwrap();
+        assert_eq!(c.color, ColorMode::NEVER);
+    }
+
+    #[test]
+    fn icons_flag() {
+        let args = Args::try_parse_from(["stree", "--icons"]).unwrap();
+        assert!(args.icons);
+    }
+
+    #[test]
+    fn depth_value_is_parsed() {
+        let args = Args::try_parse_from(["stree", "--depth", "3"]).unwrap();
+        assert_eq!(args.depth, Some(3));
+    }
+
+    #[test]
+    fn dirs_only_flag() {
+        let args = Args::try_parse_from(["stree", "--dirs-only"]).unwrap();
+        assert!(args.dirs_only);
+        assert!(!args.files_only);
+    }
+
+    #[test]
+    fn files_only_flag() {
+        let args = Args::try_parse_from(["stree", "--files-only"]).unwrap();
+        assert!(args.files_only);
+        assert!(!args.dirs_only);
+    }
+
+    #[test]
+    fn prune_empty_flag() {
+        let args = Args::try_parse_from(["stree", "--prune-empty"]).unwrap();
+        assert!(args.prune_empty);
+    }
+
+    #[test]
+    fn git_flag() {
+        let args = Args::try_parse_from(["stree", "--git"]).unwrap();
+        assert!(args.git);
+    }
+
+    #[test]
+    fn git_branch_flag() {
+        let args = Args::try_parse_from(["stree", "--git-branch"]).unwrap();
+        assert!(args.git_branch);
+    }
+
+    #[test]
+    fn json_flag() {
+        let args = Args::try_parse_from(["stree", "--json"]).unwrap();
+        assert!(args.json);
+    }
+
+    #[test]
+    fn count_flag() {
+        let args = Args::try_parse_from(["stree", "--count"]).unwrap();
+        assert!(args.count);
+    }
+
+    #[test]
+    fn time_flag() {
+        let args = Args::try_parse_from(["stree", "--time"]).unwrap();
+        assert!(args.time);
+    }
+
+    #[test]
+    fn verbose_flag() {
+        let args = Args::try_parse_from(["stree", "--verbose"]).unwrap();
+        assert!(args.verbose);
+    }
+
+    #[test]
+    fn full_combination_parses() {
+        let args = Args::try_parse_from([
+            "stree",
+            "--gitignore",
+            "--hidden-files",
+            "--color",
+            "always",
+            "--icons",
+            "--depth",
+            "2",
+            "--dirs-only",
+            "--prune-empty",
+            "--git",
+            "--git-branch",
+            "--time",
+            "--verbose",
+            "root_dir",
+        ])
+        .unwrap();
+
+        assert!(args.gitignore);
+        assert!(args.hidden_files);
+        assert_eq!(args.color, ColorMode::ALWAYS);
+        assert!(args.icons);
+        assert_eq!(args.depth, Some(2));
+        assert!(args.dirs_only);
+        assert!(args.prune_empty);
+        assert!(args.git);
+        assert!(args.git_branch);
+        assert!(args.time);
+        assert!(args.verbose);
+        assert_eq!(args.root, "root_dir");
+    }
+
+    #[test]
+    fn rejects_invalid_enum_value() {
+        let err = Args::try_parse_from(["stree", "--color", "rainbow"]).unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("rainbow"));
+        assert!(msg.contains("possible values"));
     }
 }
