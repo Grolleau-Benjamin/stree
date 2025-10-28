@@ -31,3 +31,79 @@ fn render_node_to<W: Write>(w: &mut W, node: &Node, prefix: &str, is_last: bool)
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::node::Node;
+
+    #[test]
+    fn renders_single_node() {
+        let root = Node::new_dir("root", vec![]);
+        let mut buf = Vec::new();
+        render_to(&mut buf, &root).unwrap();
+        assert_eq!(String::from_utf8(buf).unwrap(), "root\n");
+    }
+
+    #[test]
+    fn renders_tree_with_dirs_and_files() {
+        // root
+        // ├── src
+        // │   ├── main.rs
+        // │   └── lib.rs
+        // └── README.md
+        let root = Node::new_dir(
+            "root",
+            vec![
+                Node::new_dir(
+                    "src",
+                    vec![
+                        Node::new_file("main.rs", 123),
+                        Node::new_file("lib.rs", 456),
+                    ],
+                ),
+                Node::new_file("README.md", 789),
+            ],
+        );
+
+        let mut buf = Vec::new();
+        render_to(&mut buf, &root).unwrap();
+        let got = String::from_utf8(buf).unwrap();
+
+        let expected = "\
+root
+├── src
+│   ├── main.rs
+│   └── lib.rs
+└── README.md
+";
+        assert_eq!(got, expected);
+    }
+
+    #[test]
+    fn renders_nested_last_branch_correctly() {
+        // root
+        // └── a
+        //     └── b
+        //         └── c.txt
+        let root = Node::new_dir(
+            "root",
+            vec![Node::new_dir(
+                "a",
+                vec![Node::new_dir("b", vec![Node::new_file("c.txt", 1)])],
+            )],
+        );
+
+        let mut buf = Vec::new();
+        render_to(&mut buf, &root).unwrap();
+        let got = String::from_utf8(buf).unwrap();
+
+        let expected = "\
+root
+└── a
+    └── b
+        └── c.txt
+";
+        assert_eq!(got, expected);
+    }
+}
