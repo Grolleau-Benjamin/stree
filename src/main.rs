@@ -5,7 +5,7 @@ use stree::{cli::args, fs_scan::walk, renderer::stdout};
 fn main() {
     let raw = args::Args::parse();
 
-    let config = match stree::config::AppConfig::from_raw(raw) {
+    let config = match raw.build_config() {
         Ok(cfg) => cfg,
         Err(msg) => {
             eprintln!("Error: {msg}");
