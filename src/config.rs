@@ -132,21 +132,21 @@ mod tests {
 
         assert!(matches!(cfg.output, OutputMode::STDOUT));
 
-        assert_eq!(cfg.walk.follow_gitignore, false);
-        assert_eq!(cfg.walk.include_hidden, false);
+        assert!(!cfg.walk.follow_gitignore);
+        assert!(!cfg.walk.include_hidden);
         assert!(cfg.walk.depth.is_none());
-        assert_eq!(cfg.walk.dirs_only, false);
-        assert_eq!(cfg.walk.files_only, false);
-        assert_eq!(cfg.walk.prune_empty, false);
+        assert!(!cfg.walk.dirs_only);
+        assert!(!cfg.walk.files_only);
+        assert!(!cfg.walk.prune_empty);
 
         assert_eq!(cfg.render.color, ColorMode::AUTO);
-        assert_eq!(cfg.render.icons, false);
+        assert!(!cfg.render.icons);
 
-        assert_eq!(cfg.git.enabled, false);
-        assert_eq!(cfg.git.show_branch, false);
+        assert!(!cfg.git.enabled);
+        assert!(!cfg.git.show_branch);
 
-        assert_eq!(cfg.runtime.measure_time, false);
-        assert_eq!(cfg.runtime.verbose, false);
+        assert!(!cfg.runtime.measure_time);
+        assert!(!cfg.runtime.verbose);
         assert_eq!(cfg.runtime.root, PathBuf::from("."));
     }
 
