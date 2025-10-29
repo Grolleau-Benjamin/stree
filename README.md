@@ -87,20 +87,20 @@ All CLI options are **planned**, but some are not yet implemented.
 
 | Option | Status | Description |
 |--------|---------|-------------|
-| `--gitignore` | ✅ Completed | Show files listed in `.gitignore` (ignored by default) |
-| `--hidden-files` | ✅ Completed | Include hidden files and directories (starting with `.`) |
-| `--color <Auto\|Always\|Never>` | 🕓 Planned | Colorize the output (directories, files, others) |
-| `--icons` | 🕓 Planned | Add icons for known file types and directories |
-| `--depth <N>` | 🕓 Planned | Limit the displayed depth of the tree |
-| `--dirs-only` | 🕓 Planned | Display only directories |
-| `--files-only` | 🕓 Planned | Display only files |
-| `--prune-empty` | 🕓 Planned | Hide empty directories |
-| `--git` | 🕓 Planned | Display Git status indicators (modified, staged, untracked, etc.) |
-| `--git-branch` | 🕓 Planned | Show the current Git branch name next to the root |
-| `--json` | 🕓 Planned | Output the tree as a JSON structure |
-| `--count` | 🕓 Planned | Print only the number of files and directories |
-| `--time` | 🕓 Planned | Measure and display execution time |
-| `--verbose` | ✅ Completed | Enable detailed logging |
+| `--gitignore` | ✅ | Show files listed in `.gitignore` (ignored by default) |
+| `--hidden-files` | ✅ | Include hidden files and directories (starting with `.`) |
+| `--color <Auto\|Always\|Never>` | 🕓 | Colorize the output (directories, files, others) |
+| `--icons` | 🕓 | Add icons for known file types and directories |
+| `--depth <N>` | 🕓 | Limit the displayed depth of the tree |
+| `--dirs-only` | 🕓 | Display only directories |
+| `--files-only` | 🕓 | Display only files |
+| `--prune-empty` | 🕓 | Hide empty directories |
+| `--git` | 🕓 | Display Git status indicators (modified, staged, untracked, etc.) |
+| `--git-branch` | 🕓 | Show the current Git branch name next to the root |
+| `--json` | 🕓 | Output the tree as a JSON structure |
+| `--count` | 🕓 | Print only the number of files and directories |
+| `--time` | 🕓 | Measure and display execution time |
+| `--verbose` | ✅ | Enable detailed logging |
 
 ## 👥 Contributors
 
