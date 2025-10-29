@@ -1,6 +1,6 @@
 [package]
 name = "stree"
-version = "0.1.0"
+version = "0.1.0-alpha"
 edition = "2024"
 
 [dependencies]
@@ -8,6 +8,9 @@ clap = { version = "4.5.50", features = ["derive"]}
 env_logger = "0.11.8"
 ignore = "0.4"
 log = "0.4.28"
+
+[build-dependencies]
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
 
 [dev-dependencies]
 tempfile = "3"
