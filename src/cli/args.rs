@@ -1,4 +1,5 @@
 use crate::config;
+use crate::version;
 use clap::{Parser, ValueEnum};
 
 #[derive(Copy, Clone, Debug, ValueEnum, PartialEq)]
@@ -11,7 +12,8 @@ pub enum ColorMode {
 #[derive(Parser, Debug)]
 #[command(
     name = "stree",
-    version,
+    version = version::SHORT,
+    long_version = version::LONG,
     about = " Stree — a modern and smart reimplementation of the classic `tree` command.",
     long_about = r#"
 STree enhances the classic `tree` by adding colorized output, .gitignore
