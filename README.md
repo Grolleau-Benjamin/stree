@@ -87,8 +87,8 @@ All CLI options are **planned**, but some are not yet implemented.
 
 | Option | Status | Description |
 |--------|---------|-------------|
-| `--gitignore` | 🕓 Planned | Show files listed in `.gitignore` (ignored by default) |
-| `--hidden-files` | 🕓 Planned | Include hidden files and directories (starting with `.`) |
+| `--gitignore` | ✅ Completed | Show files listed in `.gitignore` (ignored by default) |
+| `--hidden-files` | ✅ Completed | Include hidden files and directories (starting with `.`) |
 | `--color <Auto\|Always\|Never>` | 🕓 Planned | Colorize the output (directories, files, others) |
 | `--icons` | 🕓 Planned | Add icons for known file types and directories |
 | `--depth <N>` | 🕓 Planned | Limit the displayed depth of the tree |
