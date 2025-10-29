@@ -52,7 +52,7 @@ mod tests {
         let root = Node::new_dir("root", vec![]);
         let mut buf = Vec::new();
         render_to(&mut buf, &root).unwrap();
-        assert_eq!(String::from_utf8(buf).unwrap(), "root\n");
+        assert_eq!(String::from_utf8(buf).unwrap(), "root/\n");
     }
 
     #[test]
@@ -81,8 +81,8 @@ mod tests {
         let got = String::from_utf8(buf).unwrap();
 
         let expected = "\
-root
-├── src
+root/
+├── src/
 │   ├── main.rs
 │   └── lib.rs
 └── README.md
@@ -109,9 +109,9 @@ root
         let got = String::from_utf8(buf).unwrap();
 
         let expected = "\
-root
-└── a
-    └── b
+root/
+└── a/
+    └── b/
         └── c.txt
 ";
         assert_eq!(got, expected);
