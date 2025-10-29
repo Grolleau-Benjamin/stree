@@ -1,9 +1,10 @@
-use std::fs;
+use std::fs::{self, File};
 use std::path::Path;
 use tempfile::TempDir;
 
 use stree::config::WalkOptions;
 use stree::fs_scan::walk::walk_path;
+use stree::model::node::Kind;
 
 fn make_fs_tree() -> (TempDir, std::path::PathBuf) {
     let tmp = TempDir::new().expect("tmpdir");
@@ -163,5 +164,107 @@ fn deep_structure_is_preserved() {
     assert!(
         kids.iter().any(|n| n.name == "file.txt"),
         "file.txt must exist under dir/sub"
+    );
+}
+
+#[test]
+fn walk_with_no_depth_includes_all() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+
+    // Create a nested folder structure
+    let level1 = root.join("level1");
+    let level2 = level1.join("level2");
+    fs::create_dir_all(&level2).unwrap();
+
+    File::create(level2.join("file.txt")).unwrap();
+
+    let opts = WalkOptions {
+        include_hidden: false,
+        follow_gitignore: true,
+        depth: None,
+        dirs_only: false,
+        files_only: false,
+        prune_empty: false,
+    };
+
+    let tree = walk_path(root, &opts).unwrap();
+
+    // Root is directory
+    assert_eq!(tree.meta.kind, Kind::Dir);
+    // Check that level1 exists
+    let level1_node = tree
+        .children
+        .as_ref()
+        .unwrap()
+        .iter()
+        .find(|n| n.name == "level1")
+        .unwrap();
+    assert_eq!(level1_node.meta.kind, Kind::Dir);
+    // Check that level2 exists
+    let level2_node = level1_node
+        .children
+        .as_ref()
+        .unwrap()
+        .iter()
+        .find(|n| n.name == "level2")
+        .unwrap();
+    assert_eq!(level2_node.meta.kind, Kind::Dir);
+    // Check that file exists
+    let file_node = level2_node
+        .children
+        .as_ref()
+        .unwrap()
+        .iter()
+        .find(|n| n.name == "file.txt")
+        .unwrap();
+    assert_eq!(file_node.meta.kind, Kind::File);
+}
+
+#[test]
+fn walk_with_depth_limits_traversal() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+
+    // Nested structure
+    let level1 = root.join("level1");
+    let level2 = level1.join("level2");
+    fs::create_dir_all(&level2).unwrap();
+
+    File::create(level2.join("file.txt")).unwrap();
+
+    let opts = WalkOptions {
+        include_hidden: false,
+        follow_gitignore: true,
+        depth: Some(1),
+        dirs_only: false,
+        files_only: false,
+        prune_empty: false,
+    };
+
+    let tree = walk_path(root, &opts).unwrap();
+
+    // Root should have children
+    assert!(!tree.children.as_ref().unwrap().is_empty());
+
+    // level1 should exist
+    let level1_node = tree
+        .children
+        .as_ref()
+        .unwrap()
+        .iter()
+        .find(|n| n.name == "level1")
+        .unwrap();
+    assert_eq!(level1_node.meta.kind, Kind::Dir);
+
+    // level2 should NOT exist
+    let level2_exists = level1_node
+        .children
+        .as_ref()
+        .map(|c| c.iter().any(|n| n.name == "level2"))
+        .unwrap_or(false);
+    assert!(
+        !level2_exists,
+        "level2 should be skipped due to depth limit"
     );
 }

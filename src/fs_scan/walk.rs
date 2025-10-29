@@ -59,6 +59,9 @@ pub fn walk_path(root: &Path, opts: &WalkOptions) -> io::Result<Node> {
         if entry.depth() == 0 {
             continue;
         }
+        if entry.depth() > opts.depth.unwrap_or(usize::MAX) {
+            continue;
+        }
 
         if should_skip(&entry) {
             continue;
