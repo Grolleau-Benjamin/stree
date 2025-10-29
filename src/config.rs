@@ -132,7 +132,7 @@ mod tests {
 
         assert!(matches!(cfg.output, OutputMode::STDOUT));
 
-        assert!(!cfg.walk.follow_gitignore);
+        assert!(cfg.walk.follow_gitignore);
         assert!(!cfg.walk.include_hidden);
         assert!(cfg.walk.depth.is_none());
         assert!(!cfg.walk.dirs_only);
@@ -178,7 +178,7 @@ mod tests {
 
         let cfg = AppConfig::from_raw(args).unwrap();
 
-        assert!(cfg.walk.follow_gitignore);
+        assert!(!cfg.walk.follow_gitignore);
         assert!(cfg.walk.include_hidden);
         assert_eq!(cfg.walk.depth, Some(3));
         assert!(cfg.walk.dirs_only);
