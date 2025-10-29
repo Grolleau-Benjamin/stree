@@ -20,7 +20,7 @@ fn main() {
     let current_dir: PathBuf = config.runtime.root;
     debug!("Running STree in: {}", current_dir.display());
 
-    if let Ok(node) = walk::walk_path(&current_dir) {
+    if let Ok(node) = walk::walk_path(&current_dir, &config.walk) {
         stdout::render(&node);
     } else {
         error!("❌ - failed to execute STree on this directory!");

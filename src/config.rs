@@ -73,7 +73,7 @@ impl AppConfig {
 
         Ok(Self {
             walk: WalkOptions {
-                follow_gitignore: raw.gitignore,
+                follow_gitignore: !raw.gitignore,
                 include_hidden: raw.hidden_files,
                 depth: raw.depth,
                 dirs_only: raw.dirs_only,
