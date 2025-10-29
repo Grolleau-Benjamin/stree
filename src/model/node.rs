@@ -57,6 +57,10 @@ impl Node {
     pub fn children_slice(&self) -> &[Node] {
         self.children.as_deref().unwrap_or(&[])
     }
+
+    pub fn is_dir(&self) -> bool {
+        self.meta.kind == Kind::Dir
+    }
 }
 
 #[cfg(test)]

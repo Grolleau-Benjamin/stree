@@ -7,7 +7,12 @@ pub fn render(root: &Node) {
 }
 
 pub fn render_to<W: Write>(mut w: W, root: &Node) -> io::Result<()> {
-    writeln!(w, "{}", root.name)?;
+    let name = if root.is_dir() {
+        format!("{}/", root.name)
+    } else {
+        root.name.clone()
+    };
+    writeln!(w, "{}", name)?;
     let children = root.children_slice();
     let last_idx = children.len().saturating_sub(1);
     for (i, child) in children.iter().enumerate() {
@@ -18,7 +23,12 @@ pub fn render_to<W: Write>(mut w: W, root: &Node) -> io::Result<()> {
 
 fn render_node_to<W: Write>(w: &mut W, node: &Node, prefix: &str, is_last: bool) -> io::Result<()> {
     let branch = if is_last { "└── " } else { "├── " };
-    writeln!(w, "{}{}{}", prefix, branch, node.name)?;
+    let name = if node.is_dir() {
+        format!("{}/", node.name)
+    } else {
+        node.name.clone()
+    };
+    writeln!(w, "{}{}{}", prefix, branch, name)?;
 
     let mut new_prefix = String::with_capacity(prefix.len() + 4);
     new_prefix.push_str(prefix);
