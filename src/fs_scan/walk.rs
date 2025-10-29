@@ -125,7 +125,7 @@ fn push_file(arena: &mut Vec<TmpNode>, name: &str, size: u64) -> usize {
     arena.len() - 1
 }
 
-fn push_child(parent_idx: usize, child_idx: usize, arena: &mut Vec<TmpNode>) {
+fn push_child(parent_idx: usize, child_idx: usize, arena: &mut [TmpNode]) {
     if let Some(parent) = arena.get_mut(parent_idx) {
         parent.children.push(child_idx);
     }
