@@ -1,6 +1,7 @@
 use std::fs;
 use std::fs::File;
 use std::io::Write;
+use stree::config::WalkOptions;
 use stree::fs_scan::walk::walk_path;
 use stree::model::node::Kind;
 
@@ -15,7 +16,15 @@ fn walk_simple_tree() {
     let mut f = File::create(src.join("main.rs")).unwrap();
     writeln!(f, "fn main() {{}}").unwrap();
 
-    let tree = walk_path(root).unwrap();
+    let opts = WalkOptions {
+        follow_gitignore: false,
+        include_hidden: false,
+        depth: None,
+        dirs_only: false,
+        files_only: false,
+        prune_empty: false,
+    };
+    let tree = walk_path(root, &opts).unwrap();
     assert_eq!(tree.meta.kind, Kind::Dir);
     let src_node = tree
         .children
