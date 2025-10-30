@@ -10,29 +10,48 @@ jobs:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
+            use_cross: true
           - os: ubuntu-latest
             target: aarch64-unknown-linux-musl
+            use_cross: true
           - os: macos-latest
             target: x86_64-apple-darwin
+            use_cross: false
           - os: macos-latest
             target: aarch64-apple-darwin
+            use_cross: false
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
 
+      - name: Install cross
+        if: ${{ matrix.use_cross }}
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+
       - name: Build
-        run: cargo build --release --locked --target ${{ matrix.target }}
+        run: |
+          if [ "${{ matrix.use_cross }}" = "true" ]; then
+            cross build --release --locked --target ${{ matrix.target }}
+          else
+            cargo build --release --locked --target ${{ matrix.target }}
+          fi
 
       - name: Strip
         run: |
-          BIN=target/${{ matrix.target }}/release/stree
-          if [[ "${{ runner.os }}" == "Linux" ]]; then strip "$BIN" || true; fi
-          if [[ "${{ runner.os }}" == "macOS" ]]; then strip -x "$BIN" || true; fi
+          BIN="target/${{ matrix.target }}/release/stree"
+          if [[ "${{ runner.os }}" == "Linux" ]]; then
+            strip "$BIN" || true
+          else
+            strip -x "$BIN" || true
+          fi
 
       - name: Package
         shell: bash
@@ -40,8 +59,8 @@ jobs:
           TAG="${GITHUB_REF_NAME}"
           PKG="stree-${TAG}-${{ matrix.target }}"
           mkdir -p pack
-          cp target/${{ matrix.target }}/release/stree pack/
-          cp LICENSE pack/
+          cp "target/${{ matrix.target }}/release/stree" pack/
+          cp LICENSE pack/ || true
           tar -C pack -czf "${PKG}.tar.gz" .
           shasum -a 256 "${PKG}.tar.gz" > "${PKG}.sha256"
 
@@ -56,11 +75,14 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: dist
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
