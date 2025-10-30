@@ -19,6 +19,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
@@ -26,9 +28,9 @@ jobs:
       - name: Build
         run: cargo build --release --locked --target ${{ matrix.target }}
 
-      - name: Strip binary
+      - name: Strip
         run: |
-          BIN=./target/${{ matrix.target }}/release/stree
+          BIN=target/${{ matrix.target }}/release/stree
           if [[ "${{ runner.os }}" == "Linux" ]]; then strip "$BIN" || true; fi
           if [[ "${{ runner.os }}" == "macOS" ]]; then strip -x "$BIN" || true; fi
 
@@ -43,11 +45,25 @@ jobs:
           tar -C pack -czf "${PKG}.tar.gz" .
           shasum -a 256 "${PKG}.tar.gz" > "${PKG}.sha256"
 
-      - name: Upload assets
-        uses: softprops/action-gh-release@v2
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: |
+          name: stree-${{ github.ref_name }}-${{ matrix.target }}
+          path: |
             stree-${{ github.ref_name }}-${{ matrix.target }}.tar.gz
             stree-${{ github.ref_name }}-${{ matrix.target }}.sha256
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
