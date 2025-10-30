@@ -152,7 +152,7 @@ All CLI options are **planned**, but some are not yet implemented.
     </td>
     <td align="center">
       <a href="https://github.com/angelo-tny">
-        <img src="https://images.weserv.nl/?url=github.com/angelo-tny.png&h=90&w=90&fit=cover&mask=circle" width="90" height="90" alt="Angelo Tunney"/><br/>
+        <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/116174527?v=4&h=90&w=90&fit=cover&mask=circle" width="90" height="90" alt="Angelo Tunney"/><br/>
         <sub><b>Angelo Tunney</b></sub>
       </a>
     </td>
