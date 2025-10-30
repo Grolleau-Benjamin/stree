@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Copyright (c) 2025 Benjamin Grolleau and Angelo Tunney
+
 use std::path::PathBuf;
 
 use crate::cli::args::{Args, ColorMode};

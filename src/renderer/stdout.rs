@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Copyright (c) 2025 Benjamin Grolleau and Angelo Tunney
+
 use crate::model::node::Node;
 use std::io::{self, Write};
 
