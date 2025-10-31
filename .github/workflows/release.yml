@@ -4,7 +4,28 @@ on:
     tags: ["v*.*.*"]
 
 jobs:
+  guard:
+    runs-on: ubuntu-latest
+    outputs:
+      on_main: ${{ steps.check.outputs.on_main }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: git fetch origin main --depth=1
+      - id: check
+        shell: bash
+        run: |
+          SHA="$(git rev-list -n1 "${GITHUB_REF_NAME}")"
+          if git merge-base --is-ancestor "$SHA" origin/main; then
+            echo "on_main=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "on_main=false" >> "$GITHUB_OUTPUT"
+          fi
+  
   build:
+    needs: guard
+    if: ${{ needs.guard.outputs.on_main == 'true' }}
     strategy:
       matrix:
         include:
@@ -73,7 +94,8 @@ jobs:
             stree-${{ github.ref_name }}-${{ matrix.target }}.sha256
 
   release:
-    needs: build
+    needs: [guard, build]
+    if: ${{ needs.guard.outputs.on_main == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
