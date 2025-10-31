@@ -248,10 +248,7 @@ pub static EXTENSION_ICONS: phf::Map<&'static str, char> = phf_map! {
 
 #[inline]
 pub fn dir_icon(name: &str) -> char {
-    match DIR_ICONS.get(name).copied() {
-        Some(c) => c,
-        None => '\u{f115}',
-    }
+    DIR_ICONS.get(name).copied().unwrap_or('\u{f115}')
 }
 
 #[inline]
@@ -259,10 +256,7 @@ pub fn file_icon(name: &str) -> char {
     match FILE_ICONS.get(name).copied() {
         Some(c) => c,
         None => match name.rsplit('.').next() {
-            Some(ext) => match EXTENSION_ICONS.get(ext).copied() {
-                Some(c) => c,
-                None => '\u{f016}',
-            },
+            Some(ext) => EXTENSION_ICONS.get(ext).copied().unwrap_or('\u{f016}'),
             None => '\u{f016}',
         },
     }
