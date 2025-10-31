@@ -4,7 +4,28 @@ on:
     tags: ["v*.*.*"]
 
 jobs:
+  guard:
+    runs-on: ubuntu-latest
+    outputs:
+      on_main: ${{ steps.check.outputs.on_main }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: git fetch origin main --depth=1
+      - id: check
+        shell: bash
+        run: |
+          SHA="$(git rev-list -n1 "${GITHUB_REF_NAME}")"
+          if git merge-base --is-ancestor "$SHA" origin/main; then
+            echo "on_main=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "on_main=false" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: guard
+    if: ${{ needs.guard.outputs.on_main == 'true' }}
     strategy:
       matrix:
         include:
@@ -73,7 +94,8 @@ jobs:
             stree-${{ github.ref_name }}-${{ matrix.target }}.sha256
 
   release:
-    needs: build
+    needs: [guard, build]
+    if: ${{ needs.guard.outputs.on_main == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -83,9 +105,35 @@ jobs:
         with:
           path: dist
 
+      - name: Extract changelog for current tag
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VER="${TAG#v}"
+
+          if [ ! -f CHANGELOG.md ]; then
+            echo "No CHANGELOG.md found" > RELEASE_NOTES.md
+            exit 0
+          fi
+
+          awk -v ver="$VER" '
+            BEGIN{p=0}
+            { sub(/\r$/,"") }
+            /^##[[:space:]]/ {
+              if (p && $0 !~ "\\[" ver "\\]") exit
+              if ($0 ~ "\\[" ver "\\]") p=1
+            }
+            p { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+
+          if ! grep -q "^##[[:space:]]" RELEASE_NOTES.md; then
+            echo "No changelog entry for $VER" > RELEASE_NOTES.md
+          fi
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/**/*
+          body_path: RELEASE_NOTES.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

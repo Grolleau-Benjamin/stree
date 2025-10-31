@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-
 // Copyright (c) 2025 Benjamin Grolleau and Angelo Tunney
 
 use clap::Parser;
@@ -25,7 +24,7 @@ fn main() {
     debug!("Running STree in: {}", current_dir.display());
 
     if let Ok(node) = walk::walk_path(&current_dir, &config.walk) {
-        stdout::render(&node);
+        stdout::render(&node, &config.render);
     } else {
         error!("❌ - failed to execute STree on this directory!");
     }
