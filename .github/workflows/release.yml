@@ -83,9 +83,35 @@ jobs:
         with:
           path: dist
 
+      - name: Extract changelog for current tag
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VER="${TAG#v}"
+
+          if [ ! -f CHANGELOG.md ]; then
+            echo "No CHANGELOG.md found" > RELEASE_NOTES.md
+            exit 0
+          fi
+
+          awk -v ver="$VER" '
+            BEGIN{p=0}
+            { sub(/\r$/,"") }
+            /^##[[:space:]]/ {
+              if (p && $0 !~ "\\[" ver "\\]") exit
+              if ($0 ~ "\\[" ver "\\]") p=1
+            }
+            p { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+
+          if ! grep -q "^##[[:space:]]" RELEASE_NOTES.md; then
+            echo "No changelog entry for $VER" > RELEASE_NOTES.md
+          fi
+ 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/**/*
+          body_path: RELEASE_NOTES.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
