@@ -22,7 +22,7 @@ jobs:
           else
             echo "on_main=false" >> "$GITHUB_OUTPUT"
           fi
-  
+
   build:
     needs: guard
     if: ${{ needs.guard.outputs.on_main == 'true' }}
@@ -129,7 +129,7 @@ jobs:
           if ! grep -q "^##[[:space:]]" RELEASE_NOTES.md; then
             echo "No changelog entry for $VER" > RELEASE_NOTES.md
           fi
- 
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
