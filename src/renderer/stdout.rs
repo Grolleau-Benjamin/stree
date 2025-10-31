@@ -188,7 +188,7 @@ root/
         render_to(&mut buf, &root, &icon_name).unwrap();
         let got = String::from_utf8(buf).unwrap();
 
-        let expected = format!("{}\n", format!("{}\u{0020}root/", '\u{f115}'));
+        let expected = format!("{} root/\n", '\u{f115}');
         assert_eq!(got, expected);
     }
 
