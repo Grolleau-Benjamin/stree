@@ -6,10 +6,10 @@ use std::path::PathBuf;
 use crate::cli::args::{Args, ColorMode};
 
 #[derive(Debug, Clone, Copy)]
-pub enum OutputMode {
-    STDOUT,
-    JSON,
-    COUNT,
+pub enum OutputFormat {
+    Tree,
+    Json,
+    Count,
 }
 
 #[derive(Debug, Clone)]
@@ -46,7 +46,7 @@ pub struct AppConfig {
     pub walk: WalkOptions,
     pub render: RenderOptions,
     pub git: GitOptions,
-    pub output: OutputMode,
+    pub output: OutputFormat,
     pub runtime: RuntimeOptions,
 }
 
@@ -67,11 +67,11 @@ impl AppConfig {
         }
 
         let output = if raw.json {
-            OutputMode::JSON
+            OutputFormat::Json
         } else if raw.count {
-            OutputMode::COUNT
+            OutputFormat::Count
         } else {
-            OutputMode::STDOUT
+            OutputFormat::Tree
         };
 
         Ok(Self {
@@ -133,7 +133,7 @@ mod tests {
         let args = Args::try_parse_from(["stree"]).unwrap();
         let cfg = AppConfig::from_raw(args).unwrap();
 
-        assert!(matches!(cfg.output, OutputMode::STDOUT));
+        assert!(matches!(cfg.output, OutputFormat::Tree));
 
         assert!(cfg.walk.follow_gitignore);
         assert!(!cfg.walk.include_hidden);
@@ -194,7 +194,7 @@ mod tests {
         assert!(cfg.git.enabled);
         assert!(cfg.git.show_branch);
 
-        assert!(matches!(cfg.output, OutputMode::STDOUT));
+        assert!(matches!(cfg.output, OutputFormat::Tree));
 
         assert!(cfg.runtime.measure_time);
         assert!(cfg.runtime.verbose);
@@ -205,10 +205,10 @@ mod tests {
     fn selects_output_modes_json_and_count() {
         let args_json = Args::try_parse_from(["stree", "--json"]).unwrap();
         let cfg_json = AppConfig::from_raw(args_json).unwrap();
-        assert!(matches!(cfg_json.output, OutputMode::JSON));
+        assert!(matches!(cfg_json.output, OutputFormat::Json));
 
         let args_count = Args::try_parse_from(["stree", "--count"]).unwrap();
         let cfg_count = AppConfig::from_raw(args_count).unwrap();
-        assert!(matches!(cfg_count.output, OutputMode::COUNT));
+        assert!(matches!(cfg_count.output, OutputFormat::Count));
     }
 }
