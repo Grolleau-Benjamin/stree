@@ -142,7 +142,7 @@ mod tests {
         assert!(!cfg.walk.files_only);
         assert!(!cfg.walk.prune_empty);
 
-        assert_eq!(cfg.render.color, ColorMode::AUTO);
+        assert_eq!(cfg.render.color, ColorMode::Auto);
         assert!(!cfg.render.icons);
 
         assert!(!cfg.git.enabled);
@@ -188,7 +188,7 @@ mod tests {
         assert!(!cfg.walk.files_only);
         assert!(cfg.walk.prune_empty);
 
-        assert_eq!(cfg.render.color, ColorMode::NEVER);
+        assert_eq!(cfg.render.color, ColorMode::Never);
         assert!(cfg.render.icons);
 
         assert!(cfg.git.enabled);
