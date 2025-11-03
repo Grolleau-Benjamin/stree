@@ -4,7 +4,13 @@
 use clap::Parser;
 use log::{debug, error};
 use std::path::PathBuf;
-use stree::{cli::args, fs_scan::walk, logger, renderer::stdout};
+use stree::{
+    cli::args,
+    config::OutputFormat,
+    fs_scan::walk,
+    logger,
+    renderer::{json, stdout},
+};
 
 fn main() {
     let raw = args::Args::parse();
@@ -23,9 +29,22 @@ fn main() {
     let current_dir: PathBuf = config.runtime.root;
     debug!("Running STree in: {}", current_dir.display());
 
-    if let Ok(node) = walk::walk_path(&current_dir, &config.walk) {
-        stdout::render(&node, &config.render);
-    } else {
-        error!("❌ - failed to execute STree on this directory!");
+    match walk::walk_path(&current_dir, &config.walk) {
+        Ok(node) => {
+            let mut out = std::io::stdout().lock();
+            let res = match config.output {
+                OutputFormat::Json => json::render(&mut out, &node),
+                OutputFormat::Tree => stdout::render(&mut out, &node, &config.render),
+                OutputFormat::Count => Ok(()),
+            };
+            if let Err(e) = res {
+                error!("write error: {e}");
+                std::process::exit(1);
+            }
+        }
+        Err(e) => {
+            error!("❌ - failed to execute STree on this directory! {e}");
+            std::process::exit(1);
+        }
     }
 }
