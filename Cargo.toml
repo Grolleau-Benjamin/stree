@@ -1,6 +1,6 @@
 [package]
 name = "stree"
-version = "0.3.0-alpha"
+version = "0.4.0-alpha"
 edition = "2024"
 license = "Apache-2.0"
 
