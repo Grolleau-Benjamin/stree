@@ -1,6 +1,6 @@
 [package]
 name = "stree"
-version = "0.2.0-alpha"
+version = "0.3.0-alpha"
 edition = "2024"
 license = "Apache-2.0"
 
@@ -10,6 +10,8 @@ env_logger = "0.11.8"
 ignore = "0.4"
 log = "0.4.28"
 phf = { version = "0.13.1", features = ["macros"] }
+serde = { version="1", features = ["derive"] }
+serde_json = "1"
 
 [build-dependencies]
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
