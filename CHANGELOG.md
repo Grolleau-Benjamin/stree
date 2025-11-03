@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0-alpha] — 2025-11-03
+### Added
+- `--color {never,auto,always}` :
+  - `never`: no colors
+  - `auto`: colorize only Git markers (default)
+  - `always`: full colorized output (file type + Git markers)
+- Extension-based color table using `phf` (`renderer/colors.rs`).
+- Colored Git markers with symbols (~, +, ?, →, ✖).
+
+### Changed
+- Reworked stdout renderer with 4 branchless variants:
+  - classic
+  - colorized
+  - icons
+  - icons + colorized
+
+### Performance
+- Zero allocations in the hot path (direct `Write` calls).
+- O(1) lookups for extension colors and Git markers.
+
+### Internal
+- New `renderer/colors.rs` module.
+- Updated `RenderOptions` and CLI to handle color modes.
+
 ## [0.3.0-alpha] — 2025-11-03
 ### Added
 - JSON renderer for structured output (`--json`).
