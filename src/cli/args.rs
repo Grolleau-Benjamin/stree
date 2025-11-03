@@ -7,9 +7,9 @@ use clap::{Parser, ValueEnum};
 
 #[derive(Copy, Clone, Debug, ValueEnum, PartialEq)]
 pub enum ColorMode {
-    AUTO,
-    ALWAYS,
-    NEVER,
+    Auto,
+    Always,
+    Never,
 }
 
 #[derive(Parser, Debug)]
@@ -45,7 +45,7 @@ pub struct Args {
     pub hidden_files: bool,
 
     /// Colorize the output (Auto, Always, Never).
-    #[arg(long, value_enum, default_value_t = ColorMode::AUTO)]
+    #[arg(long, value_enum, default_value_t = ColorMode::Auto)]
     pub color: ColorMode,
 
     /// Add icons for known file types and directories
@@ -129,7 +129,7 @@ mod tests {
         assert_eq!(args.root, ".");
         assert!(!args.gitignore);
         assert!(!args.hidden_files);
-        assert_eq!(args.color, ColorMode::AUTO);
+        assert_eq!(args.color, ColorMode::Auto);
         assert!(!args.icons);
         assert!(args.depth.is_none());
         assert!(!args.dirs_only);
@@ -164,13 +164,13 @@ mod tests {
     #[test]
     fn color_variants_parse() {
         let a = Args::try_parse_from(["stree", "--color", "auto"]).unwrap();
-        assert_eq!(a.color, ColorMode::AUTO);
+        assert_eq!(a.color, ColorMode::Auto);
 
         let b = Args::try_parse_from(["stree", "--color", "always"]).unwrap();
-        assert_eq!(b.color, ColorMode::ALWAYS);
+        assert_eq!(b.color, ColorMode::Always);
 
         let c = Args::try_parse_from(["stree", "--color", "never"]).unwrap();
-        assert_eq!(c.color, ColorMode::NEVER);
+        assert_eq!(c.color, ColorMode::Never);
     }
 
     #[test]
@@ -264,7 +264,7 @@ mod tests {
 
         assert!(args.gitignore);
         assert!(args.hidden_files);
-        assert_eq!(args.color, ColorMode::ALWAYS);
+        assert_eq!(args.color, ColorMode::Always);
         assert!(args.icons);
         assert_eq!(args.depth, Some(2));
         assert!(args.dirs_only);
