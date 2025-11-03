@@ -2,19 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.5.0] — 2025-11-03
+## [0.5.0-alpha] —
 ### Changed
 - Refined all file type colors to use a **pastel-themed palette** for a softer, more cohesive visual style.
-- Updated `EXT_COLORS` mapping in `renderer/colors.rs` to harmonize hues across languages and file types.
-- Adjusted default terminal colors:
-  - `DIR_COLOR` → pastel blue
-  - `FILE_DEFAULT` → light gray
-  - `RESET` unchanged
-- Improved visual balance and contrast on dark backgrounds while maintaining readability.
 
 ### Consistency
 - Color scheme aligned with modern terminal themes (Catppuccin / Tokyo Night Light aesthetic).
-- Unified tone between source, config, and documentation files.
 
 ## [0.4.0-alpha] — 2025-11-03
 ### Added
