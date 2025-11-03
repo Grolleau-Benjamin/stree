@@ -135,7 +135,7 @@ All CLI options are **planned**, but some are not yet implemented.
 | `--prune-empty` | 🕓 | Hide empty directories |
 | `--git` | 🕓 | Display Git status indicators (modified, staged, untracked, etc.) |
 | `--git-branch` | 🕓 | Show the current Git branch name next to the root |
-| `--json` | 🕓 | Output the tree as a JSON structure |
+| `--json` | ✅ | Output the tree as a JSON structure |
 | `--count` | 🕓 | Print only the number of files and directories |
 | `--time` | 🕓 | Measure and display execution time |
 | `--verbose` | ✅ | Enable detailed logging |
