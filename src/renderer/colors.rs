@@ -5,35 +5,36 @@ use crate::model::node::GitState;
 use phf::phf_map;
 
 pub static EXT_COLORS: phf::Map<&'static str, &'static [u8]> = phf_map! {
-    "rs" => b"\x1b[1;32m",
-    "c" => b"\x1b[36m",
-    "h" => b"\x1b[36m",
-    "cpp" => b"\x1b[36m",
-    "hpp" => b"\x1b[36m",
-    "cc" => b"\x1b[36m",
-    "go" => b"\x1b[96m",
-    "py" => b"\x1b[33m",
-    "ts" => b"\x1b[94m",
-    "tsx" => b"\x1b[94m",
-    "js" => b"\x1b[34m",
-    "jsx" => b"\x1b[34m",
-    "json" => b"\x1b[93m",
-    "toml" => b"\x1b[93m",
-    "yaml" => b"\x1b[93m",
-    "yml" => b"\x1b[93m",
-    "md" => b"\x1b[1;95m",
-    "mdx" => b"\x1b[1;95m",
-    "txt" => b"\x1b[38;5;244m",
-    "png" => b"\x1b[93m",
-    "jpg" => b"\x1b[93m",
-    "jpeg" => b"\x1b[93m",
-    "gif" => b"\x1b[93m",
-    "svg" => b"\x1b[93m",
-    "pdf" => b"\x1b[31m",
+    "rs"   => b"\x1b[38;5;216m",
+    "c"    => b"\x1b[38;5;110m",
+    "h"    => b"\x1b[38;5;110m",
+    "cpp"  => b"\x1b[38;5;109m",
+    "hpp"  => b"\x1b[38;5;109m",
+    "cc"   => b"\x1b[38;5;109m",
+    "go"   => b"\x1b[38;5;115m",
+    "py"   => b"\x1b[38;5;186m",
+    "js"   => b"\x1b[38;5;187m",
+    "jsx"  => b"\x1b[38;5;110m",
+    "ts"   => b"\x1b[38;5;110m",
+    "tsx"  => b"\x1b[38;5;111m",
+    "json" => b"\x1b[38;5;180m",
+    "toml" => b"\x1b[38;5;144m",
+    "yaml" => b"\x1b[38;5;187m",
+    "yml"  => b"\x1b[38;5;187m",
+    "ini"  => b"\x1b[38;5;144m",
+    "md"   => b"\x1b[38;5;182m",
+    "mdx"  => b"\x1b[38;5;182m",
+    "txt"  => b"\x1b[38;5;250m",
+    "png"  => b"\x1b[38;5;183m",
+    "jpg"  => b"\x1b[38;5;183m",
+    "jpeg" => b"\x1b[38;5;183m",
+    "gif"  => b"\x1b[38;5;183m",
+    "svg"  => b"\x1b[38;5;183m",
+    "pdf"  => b"\x1b[38;5;174m",
 };
 
-const DIR_COLOR: &[u8] = b"\x1b[1;34m";
-const FILE_DEFAULT: &[u8] = b"\x1b[37m";
+const DIR_COLOR: &[u8] = b"\x1b[38;5;110m";
+const FILE_DEFAULT: &[u8] = b"\x1b[38;5;252m";
 pub const RESET: &[u8] = b"\x1b[0m";
 
 #[inline]
