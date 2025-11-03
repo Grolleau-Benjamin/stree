@@ -4,9 +4,7 @@
 use crate::{config::RenderOptions, model::node::Node, renderer::icons};
 use std::io::{self, Write};
 
-pub fn render(root: &Node, opts: &RenderOptions) {
-    let mut out = io::stdout().lock();
-
+pub fn render<W: io::Write>(mut w: W, root: &Node, opts: &RenderOptions) -> io::Result<()> {
     let plain_name = |n: &Node| {
         if n.is_dir() {
             format!("{}/", n.name)
@@ -25,7 +23,7 @@ pub fn render(root: &Node, opts: &RenderOptions) {
 
     let make_name: &dyn Fn(&Node) -> String = if opts.icons { &icon_name } else { &plain_name };
 
-    let _ = render_to(&mut out, root, make_name);
+    render_to(&mut w, root, make_name)
 }
 
 pub fn render_to<W: Write>(
