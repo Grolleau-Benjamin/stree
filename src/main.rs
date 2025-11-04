@@ -3,12 +3,12 @@
 
 use clap::Parser;
 use log::{debug, error};
-use std::path::PathBuf;
+use std::{path::PathBuf, time::Instant};
 use stree::{
     cli::args,
     config::OutputFormat,
     fs_scan::walk,
-    logger,
+    helpers, logger,
     renderer::{json, stdout},
 };
 
@@ -29,6 +29,8 @@ fn main() {
     let current_dir: PathBuf = config.runtime.root;
     debug!("Running STree in: {}", current_dir.display());
 
+    let t_start = Instant::now();
+
     match walk::walk_path(&current_dir, &config.walk) {
         Ok(node) => {
             let mut out = std::io::stdout().lock();
@@ -46,5 +48,9 @@ fn main() {
             error!("❌ - failed to execute STree on this directory! {e}");
             std::process::exit(1);
         }
+    }
+
+    if config.runtime.measure_time {
+        eprintln!("time: {}", helpers::format_duration(t_start.elapsed()));
     }
 }
