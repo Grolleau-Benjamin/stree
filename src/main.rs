@@ -9,7 +9,7 @@ use stree::{
     config::OutputFormat,
     fs_scan::walk,
     helpers, logger,
-    renderer::{json, stdout},
+    renderer::{count, json, stdout},
 };
 
 fn main() {
@@ -37,7 +37,7 @@ fn main() {
             let res = match config.output {
                 OutputFormat::Json => json::render(&mut out, &node),
                 OutputFormat::Tree => stdout::render(&mut out, &node, &config.render),
-                OutputFormat::Count => Ok(()),
+                OutputFormat::Count => count::render(&mut out, &node),
             };
             if let Err(e) = res {
                 error!("write error: {e}");
