@@ -2,20 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.5.0-alpha] —
+## [0.5.0-alpha] — 2025-11-04
 ### Added
-- Helper function `format_duration()` (in `src/helpers.rs`) to render durations in a human-readable format (ns, µs, ms, s).
-
-### Changed
-- Refined all file type colors to use a **pastel-themed palette** for a softer, more cohesive visual style.
-
-### Consistency
-- Color scheme aligned with modern terminal themes (Catppuccin / Tokyo Night Light aesthetic).
+- `--time` flag to measure and display total execution duration (printed to stderr).
+- `--count` flag to print directory and file count.
+- Helper function `format_duration()` (src/helpers.rs) to render durations in ns/µs/ms/s.
 
 ### Internal
-- Helper function `format_duration()` (in `src/helpers.rs`) to render durations in a human-readable format (ns, µs, ms, s).
-
-
+- Unit tests for `format_duration()` and the count renderer.
+- Minor refactors in timing and renderer modules for clarity and extensibility.
 
 ## [0.4.0-alpha] — 2025-11-03
 ### Added
