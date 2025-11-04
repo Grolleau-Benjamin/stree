@@ -3,11 +3,19 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.5.0-alpha] —
+### Added
+- Helper function `format_duration()` (in `src/helpers.rs`) to render durations in a human-readable format (ns, µs, ms, s).
+
 ### Changed
 - Refined all file type colors to use a **pastel-themed palette** for a softer, more cohesive visual style.
 
 ### Consistency
 - Color scheme aligned with modern terminal themes (Catppuccin / Tokyo Night Light aesthetic).
+
+### Internal
+- Helper function `format_duration()` (in `src/helpers.rs`) to render durations in a human-readable format (ns, µs, ms, s).
+
+
 
 ## [0.4.0-alpha] — 2025-11-03
 ### Added
@@ -33,6 +41,8 @@ All notable changes to this project will be documented in this file.
 - New `renderer/colors.rs` module.
 - Updated `RenderOptions` and CLI to handle color modes.
 
+
+
 ## [0.3.0-alpha] — 2025-11-03
 ### Added
 - JSON renderer for structured output (`--json`).
@@ -49,6 +59,8 @@ All notable changes to this project will be documented in this file.
 - New `renderer/json.rs` module with unit tests for structure and Git state serialization.
 - Added comprehensive tests for JSON rendering (single node, nested, git states, omitted fields).
 
+
+
 ## [0.2.0-alpha] — 2025-10-31
 ### Added
 - Icons rendering (dir/file/extension) via PHF maps.
@@ -59,6 +71,8 @@ All notable changes to this project will be documented in this file.
 
 ### Internal
 - Refactor: `render_to` now takes a name builder `Fn(&Node) -> String`.
+
+
 
 ## [0.1.0-alpha] — 2025-10-30
 ### Added
