@@ -33,13 +33,13 @@ pub struct Node {
 }
 
 impl Node {
-    pub fn new_file(name: &str, size: u64) -> Self {
+    pub fn new_file(name: &str, size: u64, git_state: Option<GitState>) -> Self {
         Self {
             name: name.to_string(),
             meta: MetaData {
                 kind: Kind::File,
                 size: Some(size),
-                git: None,
+                git: git_state,
             },
             children: None,
         }
@@ -72,7 +72,7 @@ mod tests {
 
     #[test]
     fn test_new_file() {
-        let node = Node::new_file("file.txt", 42);
+        let node = Node::new_file("file.txt", 42, None);
         assert_eq!(node.name, "file.txt");
         assert_eq!(node.meta.kind, Kind::File);
         assert_eq!(node.meta.size, Some(42));
@@ -81,7 +81,7 @@ mod tests {
 
     #[test]
     fn test_new_dir() {
-        let child = Node::new_file("main.rs", 100);
+        let child = Node::new_file("main.rs", 100, None);
         let dir = Node::new_dir("src", vec![child.clone()]);
         assert_eq!(dir.name, "src");
         assert_eq!(dir.meta.kind, Kind::Dir);

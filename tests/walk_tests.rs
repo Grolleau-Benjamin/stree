@@ -1,9 +1,11 @@
+use git2::Repository;
 use std::fs::{self, File};
 use std::path::Path;
 use tempfile::TempDir;
 
-use stree::config::WalkOptions;
+use stree::config::{GitOptions, WalkOptions};
 use stree::fs_scan::walk::walk_path;
+use stree::model::node::GitState;
 use stree::model::node::Kind;
 
 fn make_fs_tree() -> (TempDir, std::path::PathBuf) {
@@ -57,6 +59,10 @@ fn default_hides_dotfiles_and_gitignored() {
         dirs_only: false,
         files_only: false,
         prune_empty: false,
+        git_opts: GitOptions {
+            enabled: false,
+            show_branch: false,
+        },
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -80,6 +86,10 @@ fn hidden_files_shows_dot_git_but_does_not_descend() {
         dirs_only: false,
         files_only: false,
         prune_empty: false,
+        git_opts: GitOptions {
+            enabled: false,
+            show_branch: false,
+        },
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -109,6 +119,10 @@ fn show_gitignored_entries_when_gitignore_flag_is_on() {
         dirs_only: false,
         files_only: false,
         prune_empty: false,
+        git_opts: GitOptions {
+            enabled: false,
+            show_branch: false,
+        },
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -131,6 +145,10 @@ fn hidden_plus_gitignore_flag_shows_both_dot_git_and_target() {
         dirs_only: false,
         files_only: false,
         prune_empty: false,
+        git_opts: GitOptions {
+            enabled: false,
+            show_branch: false,
+        },
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -154,6 +172,10 @@ fn deep_structure_is_preserved() {
         dirs_only: false,
         files_only: false,
         prune_empty: false,
+        git_opts: GitOptions {
+            enabled: false,
+            show_branch: false,
+        },
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -186,6 +208,10 @@ fn walk_with_no_depth_includes_all() {
         dirs_only: false,
         files_only: false,
         prune_empty: false,
+        git_opts: GitOptions {
+            enabled: false,
+            show_branch: false,
+        },
     };
 
     let tree = walk_path(root, &opts).unwrap();
@@ -240,6 +266,10 @@ fn walk_with_depth_limits_traversal() {
         dirs_only: false,
         files_only: false,
         prune_empty: false,
+        git_opts: GitOptions {
+            enabled: false,
+            show_branch: false,
+        },
     };
 
     let tree = walk_path(root, &opts).unwrap();
@@ -267,4 +297,135 @@ fn walk_with_depth_limits_traversal() {
         !level2_exists,
         "level2 should be skipped due to depth limit"
     );
+}
+
+fn make_opts() -> WalkOptions {
+    WalkOptions {
+        follow_gitignore: true,
+        include_hidden: false,
+        depth: Some(10),
+        dirs_only: false,
+        files_only: false,
+        prune_empty: false,
+        git_opts: GitOptions {
+            enabled: true,
+            show_branch: false,
+        },
+    }
+}
+
+fn init_repo(path: &Path) -> Repository {
+    Repository::init(path).expect("failed to init repo")
+}
+
+#[test]
+fn detect_untracked_file() {
+    let tmp = TempDir::new().expect("tmpdir");
+    let _repo = init_repo(tmp.path());
+
+    let file_path = tmp.path().join("untracked.txt");
+    fs::write(&file_path, "hello").unwrap();
+
+    let opts = make_opts();
+    let node = walk_path(tmp.path(), &opts).unwrap();
+
+    let file_node = node
+        .children
+        .as_ref()
+        .unwrap()
+        .iter()
+        .find(|n| n.name == "untracked.txt")
+        .unwrap();
+
+    assert_eq!(file_node.meta.git, Some(GitState::Untracked));
+}
+
+#[test]
+fn detect_staged_file() {
+    let tmp = TempDir::new().expect("tmpdir");
+    let repo = init_repo(tmp.path());
+
+    let file_path = tmp.path().join("staged.txt");
+    fs::write(&file_path, "initial").unwrap();
+
+    let mut index = repo.index().unwrap();
+    index.add_path(Path::new("staged.txt")).unwrap();
+    index.write().unwrap();
+
+    let opts = make_opts();
+    let node = walk_path(tmp.path(), &opts).unwrap();
+
+    let file_node = node
+        .children
+        .as_ref()
+        .unwrap()
+        .iter()
+        .find(|n| n.name == "staged.txt")
+        .unwrap();
+
+    assert_eq!(file_node.meta.git, Some(GitState::Staged));
+}
+
+#[test]
+fn detect_modified_file() {
+    let tmp = TempDir::new().expect("tmpdir");
+    let repo = init_repo(tmp.path());
+
+    let file_path = tmp.path().join("mod.txt");
+    fs::write(&file_path, "initial").unwrap();
+
+    let mut index = repo.index().unwrap();
+    index.add_path(Path::new("mod.txt")).unwrap();
+    index.write().unwrap();
+    let tree_id = index.write_tree().unwrap();
+    let tree = repo.find_tree(tree_id).unwrap();
+    let sig = repo.signature().unwrap();
+    repo.commit(Some("HEAD"), &sig, &sig, "initial commit", &tree, &[])
+        .unwrap();
+
+    fs::write(&file_path, "changed").unwrap();
+
+    let opts = make_opts();
+    let node = walk_path(tmp.path(), &opts).unwrap();
+
+    let file_node = node
+        .children
+        .as_ref()
+        .unwrap()
+        .iter()
+        .find(|n| n.name == "mod.txt")
+        .unwrap();
+
+    assert_eq!(file_node.meta.git, Some(GitState::Modified));
+}
+
+#[test]
+fn detect_clean_file() {
+    let tmp = TempDir::new().expect("tmpdir");
+    let repo = init_repo(tmp.path());
+
+    let file_path = tmp.path().join("clean.txt");
+    fs::write(&file_path, "ok").unwrap();
+
+    let mut index = repo.index().unwrap();
+    index.add_path(Path::new("clean.txt")).unwrap();
+    index.write().unwrap();
+    let tree_id = index.write_tree().unwrap();
+    let tree = repo.find_tree(tree_id).unwrap();
+    let sig = repo.signature().unwrap();
+    repo.commit(Some("HEAD"), &sig, &sig, "initial commit", &tree, &[])
+        .unwrap();
+
+    let opts = make_opts();
+    let node = walk_path(tmp.path(), &opts).unwrap();
+
+    let file_node = node
+        .children
+        .as_ref()
+        .unwrap()
+        .iter()
+        .find(|n| n.name == "clean.txt")
+        .unwrap();
+
+    assert_eq!(file_node.meta.git, Some(GitState::Clean));
 }
