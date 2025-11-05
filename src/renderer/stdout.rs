@@ -182,9 +182,12 @@ mod tests {
             vec![
                 Node::new_dir(
                     "src",
-                    vec![Node::new_file("main.rs", 1), Node::new_file("lib.rs", 1)],
+                    vec![
+                        Node::new_file("main.rs", 1, None),
+                        Node::new_file("lib.rs", 1, None),
+                    ],
                 ),
-                Node::new_file("README.md", 1),
+                Node::new_file("README.md", 1, None),
             ],
         );
         let mut buf = Vec::new();
@@ -219,9 +222,12 @@ root/
             vec![
                 Node::new_dir(
                     "src",
-                    vec![Node::new_file("main.rs", 1), Node::new_file("lib.rs", 1)],
+                    vec![
+                        Node::new_file("main.rs", 1, None),
+                        Node::new_file("lib.rs", 1, None),
+                    ],
                 ),
-                Node::new_file("README.md", 1),
+                Node::new_file("README.md", 1, None),
             ],
         );
         let mut buf = Vec::new();
@@ -240,7 +246,7 @@ root/
 
     #[test]
     fn auto_git_only_colors_when_git_present() {
-        let mut f = Node::new_file("a.txt", 1);
+        let mut f = Node::new_file("a.txt", 1, None);
         f.meta.git = Some(GitState::Modified);
         let mut buf = Vec::new();
         let o = opts(false, ColorMode::Auto);
@@ -252,7 +258,7 @@ root/
 
     #[test]
     fn auto_no_git_means_no_color() {
-        let f = Node::new_file("a.txt", 1);
+        let f = Node::new_file("a.txt", 1, None);
         let mut buf = Vec::new();
         let o = opts(false, ColorMode::Auto);
         render(&mut buf, &f, &o).unwrap();
@@ -263,7 +269,7 @@ root/
 
     #[test]
     fn always_colors_names() {
-        let f = Node::new_file("a.txt", 1);
+        let f = Node::new_file("a.txt", 1, None);
         let mut buf = Vec::new();
         let o = opts(false, ColorMode::Always);
         render(&mut buf, &f, &o).unwrap();
@@ -273,7 +279,7 @@ root/
 
     #[test]
     fn always_colors_with_icons() {
-        let f = Node::new_file("main.rs", 1);
+        let f = Node::new_file("main.rs", 1, None);
         let mut buf = Vec::new();
         let o = opts(true, ColorMode::Always);
         render(&mut buf, &f, &o).unwrap();

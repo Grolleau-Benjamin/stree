@@ -59,7 +59,7 @@ mod tests {
 
     #[test]
     fn render_single_file() {
-        let root = Node::new_file("file.txt", 42);
+        let root = Node::new_file("file.txt", 42, None);
         let mut buf = Vec::new();
 
         render(&mut buf, &root).unwrap();
@@ -77,8 +77,8 @@ mod tests {
         let root = Node::new_dir(
             "root",
             vec![
-                Node::new_file("a.txt", 1),
-                Node::new_dir("src", vec![Node::new_file("main.rs", 10)]),
+                Node::new_file("a.txt", 1, None),
+                Node::new_dir("src", vec![Node::new_file("main.rs", 10, None)]),
             ],
         );
 
@@ -95,7 +95,7 @@ mod tests {
 
     #[test]
     fn render_with_git_state() {
-        let mut file = Node::new_file("foo.rs", 0);
+        let mut file = Node::new_file("foo.rs", 0, None);
         file.meta.git = Some(GitState::Modified);
         let mut buf = Vec::new();
         render(&mut buf, &file).unwrap();
@@ -117,7 +117,7 @@ mod tests {
 
     #[test]
     fn render_valid_json_output() {
-        let root = Node::new_dir("r", vec![Node::new_file("a", 1)]);
+        let root = Node::new_dir("r", vec![Node::new_file("a", 1, None)]);
         let mut buf = Vec::new();
         render(&mut buf, &root).unwrap();
         let text = String::from_utf8(buf).unwrap();

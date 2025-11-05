@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2025 Benjamin Grolleau and Angelo Tunney
 
+use git2::{Repository, Status, StatusOptions};
 use ignore::{DirEntry, WalkBuilder};
 use std::{
     collections::HashMap,
@@ -9,17 +10,42 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::{config::WalkOptions, model::node::Node};
+use crate::{
+    config::WalkOptions,
+    model::node::{GitState, Node},
+};
 
 #[derive(Default, Debug)]
 struct TmpNode {
     name: String,
     size: u64,
     is_dir: bool,
+    git_state: Option<GitState>,
     children: Vec<usize>,
 }
 
 pub fn walk_path(root: &Path, opts: &WalkOptions) -> io::Result<Node> {
+    let mut git_statuses = HashMap::new();
+
+    if opts.git_opts.enabled
+        && let Ok(repo) = Repository::discover(root)
+    {
+        let repo_path = repo.workdir().unwrap_or(root);
+        let mut status_opts = StatusOptions::new();
+        status_opts
+            .include_untracked(true)
+            .include_unmodified(true)
+            .recurse_untracked_dirs(true);
+        if let Ok(statuses) = repo.statuses(Some(&mut status_opts)) {
+            for entry in statuses.iter() {
+                if let Some(path) = entry.path() {
+                    let state = map_git_status(entry.status());
+                    git_statuses.insert(repo_path.join(path), state);
+                }
+            }
+        }
+    }
+
     let mut wb = WalkBuilder::new(root);
     wb.follow_links(false)
         .hidden(!opts.include_hidden)
@@ -89,7 +115,10 @@ pub fn walk_path(root: &Path, opts: &WalkOptions) -> io::Result<Node> {
             Some(ft) if ft.is_file() => {
                 let size = entry.metadata().ok().map(|m| m.len()).unwrap_or(0);
                 let name = file_name_str(path);
-                let idx = push_file(&mut arena, &name, size);
+                let abs_path =
+                    std::fs::canonicalize(entry.path()).unwrap_or(entry.path().to_path_buf());
+                let git_state = git_statuses.get(&abs_path).cloned();
+                let idx = push_file(&mut arena, &name, size, git_state);
                 push_child(parent_idx, idx, &mut arena);
             }
             _ => continue,
@@ -114,17 +143,24 @@ fn push_dir(arena: &mut Vec<TmpNode>, name: &str) -> usize {
         name: name.to_string(),
         size: 0,
         is_dir: true,
+        git_state: None,
         children: Vec::new(),
     };
     arena.push(n);
     arena.len() - 1
 }
 
-fn push_file(arena: &mut Vec<TmpNode>, name: &str, size: u64) -> usize {
+fn push_file(
+    arena: &mut Vec<TmpNode>,
+    name: &str,
+    size: u64,
+    git_status: Option<GitState>,
+) -> usize {
     let n = TmpNode {
         name: name.to_string(),
         size,
         is_dir: false,
+        git_state: git_status,
         children: Vec::new(),
     };
     arena.push(n);
@@ -175,7 +211,7 @@ fn materialize(idx: usize, arena: &Vec<TmpNode>) -> Node {
         }
         Node::new_dir(&tmp.name, kids)
     } else {
-        Node::new_file(&tmp.name, tmp.size)
+        Node::new_file(&tmp.name, tmp.size, tmp.git_state)
     }
 }
 
@@ -193,4 +229,20 @@ fn has_dot_git_ancestor(path: &std::path::Path) -> bool {
         p = parent;
     }
     false
+}
+
+fn map_git_status(status: Status) -> GitState {
+    if status.is_wt_new() {
+        GitState::Untracked
+    } else if status.is_wt_modified() {
+        GitState::Modified
+    } else if status.is_index_new() || status.is_index_modified() {
+        GitState::Staged
+    } else if status.is_ignored() {
+        GitState::Ignored
+    } else if status.is_wt_deleted() {
+        GitState::Deleted
+    } else {
+        GitState::Clean
+    }
 }

@@ -20,6 +20,7 @@ pub struct WalkOptions {
     pub dirs_only: bool,
     pub files_only: bool,
     pub prune_empty: bool,
+    pub git_opts: GitOptions,
 }
 
 #[derive(Debug, Clone)]
@@ -45,7 +46,6 @@ pub struct RuntimeOptions {
 pub struct AppConfig {
     pub walk: WalkOptions,
     pub render: RenderOptions,
-    pub git: GitOptions,
     pub output: OutputFormat,
     pub runtime: RuntimeOptions,
 }
@@ -82,14 +82,14 @@ impl AppConfig {
                 dirs_only: raw.dirs_only,
                 files_only: raw.files_only,
                 prune_empty: raw.prune_empty,
+                git_opts: GitOptions {
+                    enabled: raw.git,
+                    show_branch: raw.git_branch,
+                },
             },
             render: RenderOptions {
                 color: raw.color,
                 icons: raw.icons,
-            },
-            git: GitOptions {
-                enabled: raw.git,
-                show_branch: raw.git_branch,
             },
             output,
             runtime: RuntimeOptions {
@@ -145,9 +145,6 @@ mod tests {
         assert_eq!(cfg.render.color, ColorMode::Auto);
         assert!(!cfg.render.icons);
 
-        assert!(!cfg.git.enabled);
-        assert!(!cfg.git.show_branch);
-
         assert!(!cfg.runtime.measure_time);
         assert!(!cfg.runtime.verbose);
         assert_eq!(cfg.runtime.root, PathBuf::from("."));
@@ -190,9 +187,6 @@ mod tests {
 
         assert_eq!(cfg.render.color, ColorMode::Never);
         assert!(cfg.render.icons);
-
-        assert!(cfg.git.enabled);
-        assert!(cfg.git.show_branch);
 
         assert!(matches!(cfg.output, OutputFormat::Tree));
 
