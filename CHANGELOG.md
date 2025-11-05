@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0-alpha] — 2025-11-03
+### Added
+- `--git` : shows an icon next to files to show their git status {Untracked: ?, Modified: ~ , Staged: +, Ignored (i), Deleted: ✖, Clean: }
+
+### Changed
+- Reworked walk to take into account git state if `--git` is enabled
+
+
 ## [0.5.0-alpha] — 2025-11-04
 ### Added
 - `--time` flag to measure and display total execution duration (printed to stderr).
@@ -11,6 +19,9 @@ All notable changes to this project will be documented in this file.
 ### Internal
 - Unit tests for `format_duration()` and the count renderer.
 - Minor refactors in timing and renderer modules for clarity and extensibility.
+### Internal
+- New Git integration layer using `git2::Repository` and `StatusOptions`.
+- Added `map_git_status()` helper to translate `git2::Status` into internal `GitState`.
 
 ## [0.4.0-alpha] — 2025-11-03
 ### Added
