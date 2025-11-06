@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0-alpha] —
+### Breaking Changes
+- **Project renamed** from `STree` → `Arbor`
+  - Binary name changed (`stree` → `arbor`)
+  - Repository and installation URLs updated
+  - All documentation, install scripts, and references reflect the new name
+  - This change breaks compatibility with scripts or aliases using the old `stree` command
+- **CLI Args**
+  - Delete useless args such as `--files-only`, `--dirs-only` and `--prune-empty`
+  - Renames args:
+    - `--gitignore` -> `--show-gitignored`
+    - `--hidden-files` -> `--show-hiddens`
+
+## Internal
+- Refactor all tests to match new specs.
+
+
 ## [0.5.0-alpha] — 2025-11-04
 ### Added
 - `--time` flag to measure and display total execution duration (printed to stderr).
