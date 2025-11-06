@@ -18,17 +18,17 @@ recursive Node tree used by renderers (for pretty printing, colorization, or JSO
 
 ## Benchmark
 ```
-time ./target/release/stree ~/Desktop/COSMY/monorepo/
-./target/release/stree ~/Desktop/COSMY/monorepo/  0.00s user 0.01s system 92% cpu 0.016 total
+time ./target/release/arbor ~/Desktop/COSMY/monorepo/
+./target/release/arbor ~/Desktop/COSMY/monorepo/  0.00s user 0.01s system 92% cpu 0.016 total
 
-./target/release/stree ~/Desktop/COSMY/monorepo/ | wc -l
+./target/release/arbor ~/Desktop/COSMY/monorepo/ | wc -l
 925
 
 
-time ./target/release/stree ~/Desktop/COSMY/monorepo/ --hidden-files --gitignore
-./target/release/stree ~/Desktop/COSMY/monorepo/ --hidden-files --gitignore  0.32s user 1.62s system 46% cpu 4.138 total
+time ./target/release/arbor ~/Desktop/COSMY/monorepo/ --hidden-files --gitignore
+./target/release/arbor ~/Desktop/COSMY/monorepo/ --hidden-files --gitignore  0.32s user 1.62s system 46% cpu 4.138 total
 
-./target/release/stree ~/Desktop/COSMY/monorepo/ --hidden-files --gitignore | wc -l
+./target/release/arbor ~/Desktop/COSMY/monorepo/ --hidden-files --gitignore | wc -l
 225374
 ```
 
