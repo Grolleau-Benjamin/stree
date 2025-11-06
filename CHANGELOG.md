@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0-alpha] —
+## [1.0.0-alpha] — 2025-11-07
 ### Breaking Changes
 - **Project renamed** from `STree` → `Arbor`
   - Binary name changed (`stree` → `arbor`)
