@@ -19,7 +19,7 @@ pub enum ColorMode {
     long_version = version::LONG,
     about = " Arbor — a modern and smart reimplementation of the classic `tree` command.",
     long_about = r#"
-STree enhances the classic `tree` by adding colorized output, .gitignore
+Arbor enhances the classic `tree` by adding colorized output, .gitignore
 integration, file-type icons, and Git status indicators. It allows you to
 navigate your projects more clearly and efficiently."#,
     author = "Benjamin Grolleau <benjamin.grolleau@outlook.com>, Angelo Tunney <angelo.tny@hotmail.com>",
@@ -58,21 +58,6 @@ pub struct Args {
     /// Limit the displayed depth of the tree
     #[arg(long, value_name = "N")]
     pub depth: Option<usize>,
-
-    /// Display only directories
-    #[arg(long)]
-    pub dirs_only: bool,
-
-    /// Display only files
-    #[arg(long)]
-    pub files_only: bool,
-
-    // -------------------
-    // FILTERING
-    // -------------------
-    /// Hide empty directories
-    #[arg(long)]
-    pub prune_empty: bool,
 
     // -------------------
     // GIT INTEGRATION
@@ -132,9 +117,6 @@ mod tests {
         assert_eq!(args.color, ColorMode::Auto);
         assert!(!args.icons);
         assert!(args.depth.is_none());
-        assert!(!args.dirs_only);
-        assert!(!args.files_only);
-        assert!(!args.prune_empty);
         assert!(!args.git);
         assert!(!args.git_branch);
         assert!(!args.json);
@@ -186,26 +168,6 @@ mod tests {
     }
 
     #[test]
-    fn dirs_only_flag() {
-        let args = Args::try_parse_from(["arbor", "--dirs-only"]).unwrap();
-        assert!(args.dirs_only);
-        assert!(!args.files_only);
-    }
-
-    #[test]
-    fn files_only_flag() {
-        let args = Args::try_parse_from(["arbor", "--files-only"]).unwrap();
-        assert!(args.files_only);
-        assert!(!args.dirs_only);
-    }
-
-    #[test]
-    fn prune_empty_flag() {
-        let args = Args::try_parse_from(["arbor", "--prune-empty"]).unwrap();
-        assert!(args.prune_empty);
-    }
-
-    #[test]
     fn git_flag() {
         let args = Args::try_parse_from(["arbor", "--git"]).unwrap();
         assert!(args.git);
@@ -252,8 +214,6 @@ mod tests {
             "--icons",
             "--depth",
             "2",
-            "--dirs-only",
-            "--prune-empty",
             "--git",
             "--git-branch",
             "--time",
@@ -267,8 +227,6 @@ mod tests {
         assert_eq!(args.color, ColorMode::Always);
         assert!(args.icons);
         assert_eq!(args.depth, Some(2));
-        assert!(args.dirs_only);
-        assert!(args.prune_empty);
         assert!(args.git);
         assert!(args.git_branch);
         assert!(args.time);
