@@ -3,6 +3,13 @@ name = "arbor"
 version = "1.0.0-alpha"
 edition = "2024"
 license = "Apache-2.0"
+authors = ["Benjamin Grolleau <benjamin.grolleau@outlook.com>", "Angelo Tunney <angelo.tny@hotmail.com>"]
+description = "A modern, colorful, and Git-aware reimplementation of the classic tree command."
+repository = "https://github.com/Grolleau-Benjamin/arbor"
+homepage = "https://github.com/Grolleau-Benjamin/arbor"
+readme = "README.md"
+keywords = ["cli", "tree", "filesystem", "git", "rust"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.50", features = ["derive"]}
