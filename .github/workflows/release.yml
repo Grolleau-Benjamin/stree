@@ -67,7 +67,7 @@ jobs:
 
       - name: Strip
         run: |
-          BIN="target/${{ matrix.target }}/release/stree"
+          BIN="target/${{ matrix.target }}/release/arbor"
           if [[ "${{ runner.os }}" == "Linux" ]]; then
             strip "$BIN" || true
           else
@@ -78,9 +78,9 @@ jobs:
         shell: bash
         run: |
           TAG="${GITHUB_REF_NAME}"
-          PKG="stree-${TAG}-${{ matrix.target }}"
+          PKG="arbor-${TAG}-${{ matrix.target }}"
           mkdir -p pack
-          cp "target/${{ matrix.target }}/release/stree" pack/
+          cp "target/${{ matrix.target }}/release/arbor" pack/
           cp LICENSE pack/ || true
           tar -C pack -czf "${PKG}.tar.gz" .
           shasum -a 256 "${PKG}.tar.gz" > "${PKG}.sha256"
@@ -88,10 +88,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: stree-${{ github.ref_name }}-${{ matrix.target }}
+          name: arbor-${{ github.ref_name }}-${{ matrix.target }}
           path: |
-            stree-${{ github.ref_name }}-${{ matrix.target }}.tar.gz
-            stree-${{ github.ref_name }}-${{ matrix.target }}.sha256
+            arbor-${{ github.ref_name }}-${{ matrix.target }}.tar.gz
+            arbor-${{ github.ref_name }}-${{ matrix.target }}.sha256
 
   release:
     needs: [guard, build]
