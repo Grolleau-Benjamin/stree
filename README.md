@@ -125,8 +125,8 @@ All CLI options are **planned**, but some are not yet implemented.
 
 | Option | Status | Description |
 |--------|---------|-------------|
-| `--gitignore` | ✅ | Show files listed in `.gitignore` (ignored by default) |
-| `--hidden-files` | ✅ | Include hidden files and directories (starting with `.`) |
+| `--show-gitignored` | ✅ | Show files listed in `.gitignore` (ignored by default) |
+| `--show-hiddens` | ✅ | Include hidden files and directories (starting with `.`) |
 | `--color <Auto\|Always\|Never>` | ✅ | Colorize the output (directories, files, others) |
 | `--icons` | ✅ | Add icons for known file types and directories |
 | `--depth <N>` | ✅ | Limit the displayed depth of the tree |

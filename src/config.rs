@@ -68,8 +68,8 @@ impl AppConfig {
 
         Ok(Self {
             walk: WalkOptions {
-                follow_gitignore: !raw.gitignore,
-                include_hidden: raw.hidden_files,
+                follow_gitignore: !raw.show_gitignored,
+                include_hidden: raw.show_hiddens,
                 depth: raw.depth,
             },
             render: RenderOptions {
@@ -137,8 +137,8 @@ mod tests {
         let args = Args::try_parse_from([
             "arbor",
             // Walk
-            "--gitignore",
-            "--hidden-files",
+            "--show-gitignored",
+            "--show-hiddens",
             "--depth",
             "3",
             // Render
