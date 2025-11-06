@@ -38,11 +38,11 @@ pub struct Args {
     // -----------
     /// Show files that are listed in .gitignore (ignored by default)
     #[arg(long)]
-    pub gitignore: bool,
+    pub show_gitignored: bool,
 
     /// Inlcude hidden files and directories (starting with .)
     #[arg(long)]
-    pub hidden_files: bool,
+    pub show_hiddens: bool,
 
     /// Colorize the output (Auto, Always, Never).
     #[arg(long, value_enum, default_value_t = ColorMode::Auto)]
@@ -112,8 +112,8 @@ mod tests {
     fn defaults_are_correct() {
         let args = Args::try_parse_from(["arbor"]).unwrap();
         assert_eq!(args.root, ".");
-        assert!(!args.gitignore);
-        assert!(!args.hidden_files);
+        assert!(!args.show_gitignored);
+        assert!(!args.show_hiddens);
         assert_eq!(args.color, ColorMode::Auto);
         assert!(!args.icons);
         assert!(args.depth.is_none());
@@ -133,14 +133,14 @@ mod tests {
 
     #[test]
     fn gitignore_flag() {
-        let args = Args::try_parse_from(["arbor", "--gitignore"]).unwrap();
-        assert!(args.gitignore);
+        let args = Args::try_parse_from(["arbor", "--show-gitignored"]).unwrap();
+        assert!(args.show_gitignored);
     }
 
     #[test]
-    fn hidden_files_flag() {
-        let args = Args::try_parse_from(["arbor", "--hidden-files"]).unwrap();
-        assert!(args.hidden_files);
+    fn show_hiddens_flag() {
+        let args = Args::try_parse_from(["arbor", "--show-hiddens"]).unwrap();
+        assert!(args.show_hiddens);
     }
 
     #[test]
@@ -207,8 +207,8 @@ mod tests {
     fn full_combination_parses() {
         let args = Args::try_parse_from([
             "arbor",
-            "--gitignore",
-            "--hidden-files",
+            "--show-gitignored",
+            "--show-hiddens",
             "--color",
             "always",
             "--icons",
@@ -222,8 +222,8 @@ mod tests {
         ])
         .unwrap();
 
-        assert!(args.gitignore);
-        assert!(args.hidden_files);
+        assert!(args.show_gitignored);
+        assert!(args.show_hiddens);
         assert_eq!(args.color, ColorMode::Always);
         assert!(args.icons);
         assert_eq!(args.depth, Some(2));
