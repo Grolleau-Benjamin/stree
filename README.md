@@ -12,8 +12,8 @@ To make your life easier, Arbor can be installed in several ways depending on yo
 
 ### 🌍 One-liner (auto-detects your OS and architecture) — Recommended
 ```bash
-curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/v0.1.0-alpha/install.sh
-curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/v0.1.0-alpha/install.sh.sha256
+curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/1.0.0-alpha/install.sh
+curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/1.0.0-alpha/install.sh.sha256
 sha256sum -c install.sh.sha256 && bash install.sh
 ```
 This command automatically detects your platform and installs the correct prebuilt binary in /usr/local/bin.
@@ -21,7 +21,7 @@ This command automatically detects your platform and installs the correct prebui
 ### 🦀 Using Cargo (build from source)
 If you already have Rust and Cargo installed:
 ```
-cargo install --git https://github.com/Grolleau-Benjamin/arbor --tag v0.1.0-alpha --locked
+cargo install --git https://github.com/Grolleau-Benjamin/arbor --tag 1.0.0-alpha --locked
 ```
 
 or manually:
@@ -34,7 +34,7 @@ sudo cp ./target/release/arbor /usr/local/bin
 
 ### 📦 Direct download (manual installation)
 1. Visit the [Release page](https://github.com/Grolleau-Benjamin/arbor/releases).
-2. Download the archive corresponding to your system (e.g. arbor-v0.1.0-alpha-x86_64-apple-darwin.tar.gz).
+2. Download the archive corresponding to your system (e.g. arbor-1.0.0-alpha-x86_64-apple-darwin.tar.gz).
 3. Extract it and move the binary somewhere in your PATH, for example:
   ```bash
   sudo mv arbor /usr/local/bin && source ~/.zprofile
