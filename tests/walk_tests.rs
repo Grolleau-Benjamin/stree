@@ -54,9 +54,6 @@ fn default_hides_dotfiles_and_gitignored() {
         include_hidden: false,
         follow_gitignore: true,
         depth: None,
-        dirs_only: false,
-        files_only: false,
-        prune_empty: false,
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -77,9 +74,6 @@ fn hidden_files_shows_dot_git_but_does_not_descend() {
         include_hidden: true,
         follow_gitignore: true,
         depth: None,
-        dirs_only: false,
-        files_only: false,
-        prune_empty: false,
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -106,9 +100,6 @@ fn show_gitignored_entries_when_gitignore_flag_is_on() {
         include_hidden: false,
         follow_gitignore: false,
         depth: None,
-        dirs_only: false,
-        files_only: false,
-        prune_empty: false,
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -128,9 +119,6 @@ fn hidden_plus_gitignore_flag_shows_both_dot_git_and_target() {
         include_hidden: true,    // show dotfiles
         follow_gitignore: false, // show gitignored
         depth: None,
-        dirs_only: false,
-        files_only: false,
-        prune_empty: false,
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -151,9 +139,6 @@ fn deep_structure_is_preserved() {
         include_hidden: false,
         follow_gitignore: true,
         depth: None,
-        dirs_only: false,
-        files_only: false,
-        prune_empty: false,
     };
 
     let tree = walk_path(Path::new(&root), &opts).expect("walk");
@@ -183,9 +168,6 @@ fn walk_with_no_depth_includes_all() {
         include_hidden: false,
         follow_gitignore: true,
         depth: None,
-        dirs_only: false,
-        files_only: false,
-        prune_empty: false,
     };
 
     let tree = walk_path(root, &opts).unwrap();
@@ -237,9 +219,6 @@ fn walk_with_depth_limits_traversal() {
         include_hidden: false,
         follow_gitignore: true,
         depth: Some(1),
-        dirs_only: false,
-        files_only: false,
-        prune_empty: false,
     };
 
     let tree = walk_path(root, &opts).unwrap();

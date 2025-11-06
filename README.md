@@ -130,9 +130,6 @@ All CLI options are **planned**, but some are not yet implemented.
 | `--color <Auto\|Always\|Never>` | ✅ | Colorize the output (directories, files, others) |
 | `--icons` | ✅ | Add icons for known file types and directories |
 | `--depth <N>` | ✅ | Limit the displayed depth of the tree |
-| `--dirs-only` | 🕓 | Display only directories |
-| `--files-only` | 🕓 | Display only files |
-| `--prune-empty` | 🕓 | Hide empty directories |
 | `--git` | 🕓 | Display Git status indicators (modified, staged, untracked, etc.) |
 | `--git-branch` | 🕓 | Show the current Git branch name next to the root |
 | `--json` | ✅ | Output the tree as a JSON structure |
