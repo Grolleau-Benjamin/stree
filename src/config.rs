@@ -109,28 +109,28 @@ mod tests {
 
     #[test]
     fn conflict_dirs_only_and_files_only() {
-        let args = Args::try_parse_from(["stree", "--dirs-only", "--files-only"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--dirs-only", "--files-only"]).unwrap();
         let err = AppConfig::from_raw(args).unwrap_err();
         assert!(err.contains("mutually exclusive"));
     }
 
     #[test]
     fn conflict_json_and_count() {
-        let args = Args::try_parse_from(["stree", "--json", "--count"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--json", "--count"]).unwrap();
         let err = AppConfig::from_raw(args).unwrap_err();
         assert!(err.contains("mutually exclusive"));
     }
 
     #[test]
     fn depth_zero_is_rejected() {
-        let args = Args::try_parse_from(["stree", "--depth", "0"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--depth", "0"]).unwrap();
         let err = AppConfig::from_raw(args).unwrap_err();
         assert!(err.contains("--depth must be >= 1"));
     }
 
     #[test]
     fn defaults_map_to_stdout_mode() {
-        let args = Args::try_parse_from(["stree"]).unwrap();
+        let args = Args::try_parse_from(["arbor"]).unwrap();
         let cfg = AppConfig::from_raw(args).unwrap();
 
         assert!(matches!(cfg.output, OutputFormat::Tree));
@@ -156,7 +156,7 @@ mod tests {
     #[test]
     fn maps_flags_to_config_correctly() {
         let args = Args::try_parse_from([
-            "stree",
+            "arbor",
             // Walk
             "--gitignore",
             "--hidden-files",
@@ -203,11 +203,11 @@ mod tests {
 
     #[test]
     fn selects_output_modes_json_and_count() {
-        let args_json = Args::try_parse_from(["stree", "--json"]).unwrap();
+        let args_json = Args::try_parse_from(["arbor", "--json"]).unwrap();
         let cfg_json = AppConfig::from_raw(args_json).unwrap();
         assert!(matches!(cfg_json.output, OutputFormat::Json));
 
-        let args_count = Args::try_parse_from(["stree", "--count"]).unwrap();
+        let args_count = Args::try_parse_from(["arbor", "--count"]).unwrap();
         let cfg_count = AppConfig::from_raw(args_count).unwrap();
         assert!(matches!(cfg_count.output, OutputFormat::Count));
     }

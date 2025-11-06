@@ -2,9 +2,9 @@ use std::fs::{self, File};
 use std::path::Path;
 use tempfile::TempDir;
 
-use stree::config::WalkOptions;
-use stree::fs_scan::walk::walk_path;
-use stree::model::node::Kind;
+use arbor::config::WalkOptions;
+use arbor::fs_scan::walk::walk_path;
+use arbor::model::node::Kind;
 
 fn make_fs_tree() -> (TempDir, std::path::PathBuf) {
     let tmp = TempDir::new().expect("tmpdir");
@@ -30,14 +30,14 @@ fn make_fs_tree() -> (TempDir, std::path::PathBuf) {
 }
 
 fn find_child<'a>(
-    node: &'a stree::model::node::Node,
+    node: &'a arbor::model::node::Node,
     name: &str,
-) -> Option<&'a stree::model::node::Node> {
+) -> Option<&'a arbor::model::node::Node> {
     let children = node.children.as_deref().unwrap_or(&[]);
     children.iter().find(|n| n.name == name)
 }
 
-fn list_top_level(node: &stree::model::node::Node) -> Vec<String> {
+fn list_top_level(node: &arbor::model::node::Node) -> Vec<String> {
     node.children
         .as_deref()
         .unwrap_or(&[])

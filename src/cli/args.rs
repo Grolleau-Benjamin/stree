@@ -14,10 +14,10 @@ pub enum ColorMode {
 
 #[derive(Parser, Debug)]
 #[command(
-    name = "stree",
+    name = "arbor",
     version = version::SHORT,
     long_version = version::LONG,
-    about = " Stree — a modern and smart reimplementation of the classic `tree` command.",
+    about = " Arbor — a modern and smart reimplementation of the classic `tree` command.",
     long_about = r#"
 STree enhances the classic `tree` by adding colorized output, .gitignore
 integration, file-type icons, and Git status indicators. It allows you to
@@ -125,7 +125,7 @@ mod tests {
 
     #[test]
     fn defaults_are_correct() {
-        let args = Args::try_parse_from(["stree"]).unwrap();
+        let args = Args::try_parse_from(["arbor"]).unwrap();
         assert_eq!(args.root, ".");
         assert!(!args.gitignore);
         assert!(!args.hidden_files);
@@ -145,106 +145,106 @@ mod tests {
 
     #[test]
     fn root_positional_is_parsed() {
-        let args = Args::try_parse_from(["stree", "/home/vatara"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "/home/vatara"]).unwrap();
         assert_eq!(args.root, "/home/vatara");
     }
 
     #[test]
     fn gitignore_flag() {
-        let args = Args::try_parse_from(["stree", "--gitignore"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--gitignore"]).unwrap();
         assert!(args.gitignore);
     }
 
     #[test]
     fn hidden_files_flag() {
-        let args = Args::try_parse_from(["stree", "--hidden-files"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--hidden-files"]).unwrap();
         assert!(args.hidden_files);
     }
 
     #[test]
     fn color_variants_parse() {
-        let a = Args::try_parse_from(["stree", "--color", "auto"]).unwrap();
+        let a = Args::try_parse_from(["arbor", "--color", "auto"]).unwrap();
         assert_eq!(a.color, ColorMode::Auto);
 
-        let b = Args::try_parse_from(["stree", "--color", "always"]).unwrap();
+        let b = Args::try_parse_from(["arbor", "--color", "always"]).unwrap();
         assert_eq!(b.color, ColorMode::Always);
 
-        let c = Args::try_parse_from(["stree", "--color", "never"]).unwrap();
+        let c = Args::try_parse_from(["arbor", "--color", "never"]).unwrap();
         assert_eq!(c.color, ColorMode::Never);
     }
 
     #[test]
     fn icons_flag() {
-        let args = Args::try_parse_from(["stree", "--icons"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--icons"]).unwrap();
         assert!(args.icons);
     }
 
     #[test]
     fn depth_value_is_parsed() {
-        let args = Args::try_parse_from(["stree", "--depth", "3"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--depth", "3"]).unwrap();
         assert_eq!(args.depth, Some(3));
     }
 
     #[test]
     fn dirs_only_flag() {
-        let args = Args::try_parse_from(["stree", "--dirs-only"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--dirs-only"]).unwrap();
         assert!(args.dirs_only);
         assert!(!args.files_only);
     }
 
     #[test]
     fn files_only_flag() {
-        let args = Args::try_parse_from(["stree", "--files-only"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--files-only"]).unwrap();
         assert!(args.files_only);
         assert!(!args.dirs_only);
     }
 
     #[test]
     fn prune_empty_flag() {
-        let args = Args::try_parse_from(["stree", "--prune-empty"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--prune-empty"]).unwrap();
         assert!(args.prune_empty);
     }
 
     #[test]
     fn git_flag() {
-        let args = Args::try_parse_from(["stree", "--git"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--git"]).unwrap();
         assert!(args.git);
     }
 
     #[test]
     fn git_branch_flag() {
-        let args = Args::try_parse_from(["stree", "--git-branch"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--git-branch"]).unwrap();
         assert!(args.git_branch);
     }
 
     #[test]
     fn json_flag() {
-        let args = Args::try_parse_from(["stree", "--json"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--json"]).unwrap();
         assert!(args.json);
     }
 
     #[test]
     fn count_flag() {
-        let args = Args::try_parse_from(["stree", "--count"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--count"]).unwrap();
         assert!(args.count);
     }
 
     #[test]
     fn time_flag() {
-        let args = Args::try_parse_from(["stree", "--time"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--time"]).unwrap();
         assert!(args.time);
     }
 
     #[test]
     fn verbose_flag() {
-        let args = Args::try_parse_from(["stree", "--verbose"]).unwrap();
+        let args = Args::try_parse_from(["arbor", "--verbose"]).unwrap();
         assert!(args.verbose);
     }
 
     #[test]
     fn full_combination_parses() {
         let args = Args::try_parse_from([
-            "stree",
+            "arbor",
             "--gitignore",
             "--hidden-files",
             "--color",
@@ -278,7 +278,7 @@ mod tests {
 
     #[test]
     fn rejects_invalid_enum_value() {
-        let err = Args::try_parse_from(["stree", "--color", "rainbow"]).unwrap_err();
+        let err = Args::try_parse_from(["arbor", "--color", "rainbow"]).unwrap_err();
         let msg = err.to_string();
         assert!(msg.contains("rainbow"));
         assert!(msg.contains("possible values"));

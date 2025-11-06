@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2025 Benjamin Grolleau and Angelo Tunney
 
-use clap::Parser;
-use log::{debug, error};
-use std::{path::PathBuf, time::Instant};
-use stree::{
+use arbor::{
     cli::args,
     config::OutputFormat,
     fs_scan::walk,
     helpers, logger,
     renderer::{count, json, stdout},
 };
+use clap::Parser;
+use log::{debug, error};
+use std::{path::PathBuf, time::Instant};
 
 fn main() {
     let raw = args::Args::parse();

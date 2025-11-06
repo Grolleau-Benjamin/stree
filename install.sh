@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="${REPO:-Grolleau-Benjamin/stree}"
-BIN="${BIN:-stree}"
+REPO="${REPO:-Grolleau-Benjamin/arbor}"
+BIN="${BIN:-arbor}"
 DEST="${DEST:-/usr/local/bin}"
 VERSION="${VERSION:-latest}"
 TMP="$(mktemp -d)"
 
-log(){ printf '\033[1;34m[stree-install]\033[0m %s\n' "$*"; }
+log(){ printf '\033[1;34m[arbor-install]\033[0m %s\n' "$*"; }
 
 uname_s="$(uname -s)"
 uname_m="$(uname -m)"

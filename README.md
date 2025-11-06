@@ -1,18 +1,18 @@
-# STree - Smart Tree 🌴
+# Arbor - Smart Tree 🌴
 _by Benjamin Grolleau & Angelo Tunney_
 
 ![Rust](https://img.shields.io/badge/language-Rust-orange?logo=rust)
 ![Status](https://img.shields.io/badge/status-in%20development-yellow)
 
-STree is a modern and smart reimplementation of the traditional tree command. Its goal is to provide developers with a more intuitive and visually clear way to explore project structures. Unlike the classic version, STree introduces several improvements such as configurable depth levels for better readability, colorized output to distinguish files and directories at a glance, and automatic filtering of files or folders ignored by Git (based on the .gitignore file). It can also display the Git status of files, showing whether they are untracked, modified, staged for commit, or stashed. STree is written in Rust.
+Arbor is a modern and smart reimplementation of the traditional tree command. Its goal is to provide developers with a more intuitive and visually clear way to explore project structures. Unlike the classic version, Arbor introduces several improvements such as configurable depth levels for better readability, colorized output to distinguish files and directories at a glance, and automatic filtering of files or folders ignored by Git (based on the .gitignore file). It can also display the Git status of files, showing whether they are untracked, modified, staged for commit, or stashed. Arbor is written in Rust.
 
 ## ⚙️ Installation
-To make your life easier, STree can be installed in several ways depending on your preferences and setup.
+To make your life easier, Arbor can be installed in several ways depending on your preferences and setup.
 
 ### 🌍 One-liner (auto-detects your OS and architecture) — Recommended
 ```bash
-curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/stree/v0.1.0-alpha/install.sh
-curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/stree/v0.1.0-alpha/install.sh.sha256
+curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/v0.1.0-alpha/install.sh
+curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/v0.1.0-alpha/install.sh.sha256
 sha256sum -c install.sh.sha256 && bash install.sh
 ```
 This command automatically detects your platform and installs the correct prebuilt binary in /usr/local/bin.
@@ -20,32 +20,32 @@ This command automatically detects your platform and installs the correct prebui
 ### 🦀 Using Cargo (build from source)
 If you already have Rust and Cargo installed:
 ```
-cargo install --git https://github.com/Grolleau-Benjamin/stree --tag v0.1.0-alpha --locked
+cargo install --git https://github.com/Grolleau-Benjamin/arbor --tag v0.1.0-alpha --locked
 ```
 
 or manually:
 ```bash
-git clone https://github.com/Grolleau-Benjamin/stree
-cd stree
+git clone https://github.com/Grolleau-Benjamin/arbor
+cd arbor
 cargo build --release
-sudo cp ./target/release/stree /usr/local/bin
+sudo cp ./target/release/arbor /usr/local/bin
 ```
 
 ### 📦 Direct download (manual installation)
-1. Visit the [Release page](https://github.com/Grolleau-Benjamin/stree/releases).
-2. Download the archive corresponding to your system (e.g. stree-v0.1.0-alpha-x86_64-apple-darwin.tar.gz).
+1. Visit the [Release page](https://github.com/Grolleau-Benjamin/arbor/releases).
+2. Download the archive corresponding to your system (e.g. arbor-v0.1.0-alpha-x86_64-apple-darwin.tar.gz).
 3. Extract it and move the binary somewhere in your PATH, for example:
   ```bash
-  sudo mv tree /usr/local/bin && source ~/.zprofile
+  sudo mv arbor /usr/local/bin && source ~/.zprofile
   ```
 
   Then verify it works:
   ```bash
-  stree --version
+  arbor --version
   ```
 
 ## 🚀 Run in development
-You can run *Stree* directly from source with Cargo:
+You can run *Arbor* directly from source with Cargo:
 ```bash
 cargo run -- [Options]
 ```
@@ -73,12 +73,12 @@ cargo build --release
 
 The compiled binary will be located in:
 ```
-./target/release/stree
+./target/release/arbor
 ```
 
 You can then run it directly:
 ```bash
-./target/release/stree [Options]
+./target/release/arbor [Options]
 ```
 
 ## 🦀 Cli Usages
@@ -88,7 +88,7 @@ cargo run -- --help
 ```
 
 ## 🧹 Code Quality & Pre-commit Hooks
-STree uses pre-commit to automatically enforce code quality and formatting rules before each commit. It ensures that every commit respects Rust’s formatting and linting standards.
+Arbor uses pre-commit to automatically enforce code quality and formatting rules before each commit. It ensures that every commit respects Rust’s formatting and linting standards.
 
 ### 🧩 Prerequisites
 Install pre-commit using one of the following methods:
@@ -120,7 +120,7 @@ pre-commit run --all-files
 
 ### 🧭 Current state
 
-STree is currently in active development.
+Arbor is currently in active development.
 All CLI options are **planned**, but some are not yet implemented.
 
 | Option | Status | Description |
