@@ -3,6 +3,7 @@ _by Benjamin Grolleau & Angelo Tunney_
 
 ![Rust](https://img.shields.io/badge/language-Rust-orange?logo=rust)
 ![Status](https://img.shields.io/badge/status-in%20development-yellow)
+![Version](https://img.shields.io/github/v/tag/Grolleau-Benjamin/arbor?label=version)
 
 Arbor is a modern and smart reimplementation of the traditional tree command. Its goal is to provide developers with a more intuitive and visually clear way to explore project structures. Unlike the classic version, Arbor introduces several improvements such as configurable depth levels for better readability, colorized output to distinguish files and directories at a glance, and automatic filtering of files or folders ignored by Git (based on the .gitignore file). It can also display the Git status of files, showing whether they are untracked, modified, staged for commit, or stashed. Arbor is written in Rust.
 
@@ -137,6 +138,10 @@ All CLI options are **planned**, but some are not yet implemented.
 | `--time` | ✅ | Measure and display execution time |
 | `--verbose` | ✅ | Enable detailed logging |
 
+## 🤝 Contributing
+Contributions, issues, and feature requests are welcome!
+Feel free to open a [pull request](https://github.com/Grolleau-Benjamin/arbor/pulls).
+
 ## 👥 Contributors
 
 <table align="center">
@@ -155,3 +160,7 @@ All CLI options are **planned**, but some are not yet implemented.
     </td>
   </tr>
 </table>
+
+## 📜 License
+Licensed under the **Apache-2.0** License.
+See [LICENSE](./LICENSE) for more information.
