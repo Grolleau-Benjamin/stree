@@ -1,0 +1,73 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2025 Benjamin Grolleau and Angelo Tunney
+
+use crate::model::node::{GitState, Node};
+use git2::{Repository, Status, StatusOptions};
+use smol_str::SmolStr;
+use std::collections::HashMap;
+use std::path::Path;
+
+pub type GitMap = HashMap<SmolStr, GitState>;
+
+pub fn collect_git_states(root: &Path) -> GitMap {
+    let Ok(repo) = Repository::discover(root) else {
+        return HashMap::new();
+    };
+
+    // not a lot of case when you have more than 4096 files!
+    let mut map = HashMap::with_capacity(4096);
+    let mut opts = StatusOptions::new();
+    opts.include_untracked(true)
+        .include_ignored(true)
+        .recurse_untracked_dirs(true);
+
+    if let Ok(statuses) = repo.statuses(Some(&mut opts)) {
+        for entry in statuses.iter() {
+            if let Some(path) = entry.path() {
+                let s = entry.status();
+                let state = if s.contains(Status::WT_MODIFIED) {
+                    GitState::Modified
+                } else if s
+                    .intersects(Status::INDEX_MODIFIED | Status::INDEX_NEW | Status::INDEX_RENAMED)
+                {
+                    GitState::Staged
+                } else if s.contains(Status::WT_NEW) {
+                    GitState::Untracked
+                } else if s.contains(Status::IGNORED) {
+                    GitState::Ignored
+                } else if s.contains(Status::WT_DELETED) {
+                    GitState::Deleted
+                } else {
+                    GitState::Clean
+                };
+                map.insert(SmolStr::new(path), state);
+            }
+        }
+    }
+
+    map
+}
+
+pub fn enrich_with_git(node: &mut Node, git: &GitMap, buf: &mut String) {
+    let keep = buf.len();
+    if !buf.is_empty() {
+        buf.push('/');
+    }
+    buf.push_str(&node.name);
+
+    let lookup_key = buf.strip_prefix("./").unwrap_or(buf.as_str());
+
+    if !node.is_dir()
+        && let Some(&state) = git.get(lookup_key)
+    {
+        node.meta.git = Some(state);
+    }
+
+    if let Some(children) = node.children.as_mut() {
+        for c in children {
+            enrich_with_git(c, git, buf);
+        }
+    }
+
+    buf.truncate(keep);
+}
