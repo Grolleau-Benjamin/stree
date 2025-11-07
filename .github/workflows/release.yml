@@ -80,8 +80,19 @@ jobs:
           TAG="${GITHUB_REF_NAME}"
           PKG="arbor-${TAG}-${{ matrix.target }}"
           mkdir -p pack
+          mkdir -p pack/docs
+
           cp "target/${{ matrix.target }}/release/arbor" pack/
           cp LICENSE pack/ || true
+
+          if [ -f docs/arbor.1 ]; then
+            cp docs/arbor.1 pack/docs/
+          fi
+
+          if [ -f docs/arbor.fish ]; then
+            cp docs/arbor.fish pack/docs/
+          fi
+
           tar -C pack -czf "${PKG}.tar.gz" .
           shasum -a 256 "${PKG}.tar.gz" > "${PKG}.sha256"
 
