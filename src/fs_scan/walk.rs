@@ -26,7 +26,7 @@ pub fn walk_path(root: &Path, opts: &WalkOptions) -> io::Result<Node> {
         .git_ignore(opts.follow_gitignore)
         .git_exclude(opts.follow_gitignore)
         .git_global(opts.follow_gitignore)
-        .threads(1)
+        .threads(0)
         .filter_entry({
             let include_hidden = opts.include_hidden;
             move |e: &DirEntry| {
@@ -168,11 +168,16 @@ fn ensure_dir_idx(
 
 fn materialize(idx: usize, arena: &Vec<TmpNode>) -> Node {
     let tmp = &arena[idx];
+
     if tmp.is_dir {
-        let mut kids = Vec::with_capacity(tmp.children.len());
-        for &c in &tmp.children {
-            kids.push(materialize(c, arena));
-        }
+        let mut sorted_children = tmp.children.clone();
+        sorted_children.sort_by(|&a, &b| arena[a].name.cmp(&arena[b].name));
+
+        let kids: Vec<Node> = sorted_children
+            .into_iter()
+            .map(|c| materialize(c, arena))
+            .collect();
+
         Node::new_dir(&tmp.name, kids)
     } else {
         Node::new_file(&tmp.name, tmp.size)
