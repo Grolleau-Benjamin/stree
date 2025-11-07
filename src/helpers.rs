@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2025 Benjamin Grolleau and Angelo Tunney
+
 use std::time::Duration;
 
 pub fn format_duration(d: Duration) -> String {
