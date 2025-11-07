@@ -126,19 +126,19 @@ pre-commit run --all-files
 Arbor is currently in active development.
 All CLI options are **planned**, but some are not yet implemented.
 
-| Option | Status | Description |
-|--------|---------|-------------|
-| `--show-gitignored` | ✅ | Show files listed in `.gitignore` (ignored by default) |
-| `--show-hiddens` | ✅ | Include hidden files and directories (starting with `.`) |
-| `--color <Auto\|Always\|Never>` | ✅ | Colorize the output (directories, files, others) |
-| `--icons` | ✅ | Add icons for known file types and directories |
-| `--depth <N>` | ✅ | Limit the displayed depth of the tree |
-| `--git` | 🕓 | Display Git status indicators (modified, staged, untracked, etc.) |
-| `--git-branch` | 🕓 | Show the current Git branch name next to the root |
-| `--json` | ✅ | Output the tree as a JSON structure |
-| `--count` | ✅ | Print only the number of files and directories |
-| `--time` | ✅ | Measure and display execution time |
-| `--verbose` | ✅ | Enable detailed logging |
+| Option | Short | Status | Description |
+|--------|--------|---------|-------------|
+| `--show-gitignored` | `-G` | ✅ | Show files listed in `.gitignore` (ignored by default) |
+| `--show-hiddens` | `-H` | ✅ | Include hidden files and directories (starting with `.`) |
+| `--color <Auto\|Always\|Never>` | `-c <>` | ✅ | Colorize the output (directories, files, others) |
+| `--icons` | `-i` | ✅ | Add icons for known file types and directories |
+| `--depth <N>` | `-d <N>` | ✅ | Limit the displayed depth of the tree |
+| `--git` | `-g` | 🕓 | Display Git status indicators (modified, staged, untracked, etc.) |
+| `--git-branch` | `-b` | 🕓 | Show the current Git branch name next to the root |
+| `--json` | `-j` | ✅ | Output the tree as a JSON structure |
+| `--count` | `n` | ✅ | Print only the number of files and directories |
+| `--time` | `-t` | ✅ | Measure and display execution time |
+| `--verbose` |`-v` | ✅ | Enable detailed logging |
 
 ## 🤝 Contributing
 Contributions, issues, and feature requests are welcome!
