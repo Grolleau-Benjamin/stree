@@ -5,6 +5,7 @@ use arbor::{
     cli::args,
     config::OutputFormat,
     fs_scan::walk,
+    git::{collect_git_states, enrich_with_git},
     helpers, logger,
     renderer::{count, json, stdout},
 };
@@ -32,12 +33,23 @@ fn main() {
     let t_start = Instant::now();
 
     match walk::walk_path(&current_dir, &config.walk) {
-        Ok(node) => {
+        Ok(mut node) => {
             let mut out = std::io::stdout().lock();
             let res = match config.output {
-                OutputFormat::Json => json::render(&mut out, &node),
-                OutputFormat::Tree => stdout::render(&mut out, &node, &config.render),
                 OutputFormat::Count => count::render(&mut out, &node),
+
+                OutputFormat::Json | OutputFormat::Tree => {
+                    if config.git.enabled {
+                        let git_states = collect_git_states(&current_dir);
+                        let mut buf = String::new();
+                        enrich_with_git(&mut node, &git_states, &mut buf);
+                    }
+                    match config.output {
+                        OutputFormat::Json => json::render(&mut out, &node),
+                        OutputFormat::Tree => stdout::render(&mut out, &node, &config.render),
+                        _ => unreachable!(),
+                    }
+                }
             };
             if let Err(e) = res {
                 error!("write error: {e}");
