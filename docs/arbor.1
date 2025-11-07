@@ -1,0 +1,62 @@
+.TH ARBOR 1 "November 2025" "arbor 1.0.0" "User Commands"
+.SH NAME
+arbor \- smart and modern alternative to the classic tree command
+.SH SYNOPSIS
+.B arbor
+[\fIOPTIONS\fR] [\fIDIRECTORY\fR]
+.SH DESCRIPTION
+Arbor displays a visual representation of a directory tree, with
+colorized output, .gitignore integration, icons, and optional Git status.
+
+.SH OPTIONS
+.TP
+\fB-G\fR, \fB--show-gitignored\fR
+Show files listed in .gitignore.
+
+.TP
+\fB-H\fR, \fB--show-hiddens\fR
+Include hidden files and directories.
+
+.TP
+\fB-c\fR, \fB--color\fR <Auto|Always|Never>
+Set color output mode.
+
+.TP
+\fB-i\fR, \fB--icons\fR
+Display icons for known file types.
+
+.TP
+\fB-d\fR, \fB--depth\fR <N>
+Limit the displayed depth of the tree.
+
+.TP
+\fB-g\fR, \fB--git\fR
+Display Git status indicators.
+
+.TP
+\fB-b\fR, \fB--git-branch\fR
+Show current branch next to root.
+
+.TP
+\fB-j\fR, \fB--json\fR
+Output as JSON.
+
+.TP
+\fB-n\fR, \fB--count\fR
+Print only number of files and directories.
+
+.TP
+\fB-t\fR, \fB--time\fR
+Measure and display execution time.
+
+.TP
+\fB-v\fR, \fB--verbose\fR
+Enable detailed logging.
+
+.TP
+\fB-h\fR, \fB--help\fR
+Print help (see more with '--help')
+
+.TP
+\fR-V\fR, \fB--version\fR
+Print version
