@@ -19,5 +19,36 @@ Thank you for your interest in contributing to STree!
 - Prefer small, focused commits
 - Document functions with docstrings when relevant
 
+## 🧹 Code Quality & Pre-commit Hooks
+Arbor uses pre-commit to automatically enforce code quality and formatting rules before each commit. It ensures that every commit respects Rust’s formatting and linting standards.
+
+### 🧩 Prerequisites
+Install pre-commit using one of the following methods:
+
+```shell
+# macOS
+brew install pre-commit
+
+# Linux
+sudo apt install pre-commit
+
+# With a local Python environment
+uv add --dev pre-commit
+# or
+poetry add --dev pre-commit
+```
+
+### ⚙️ Install
+Once installed, enable the hooks:
+```shell
+pre-commit install
+```
+
+### 🧪 Run manually
+You can manually run all hooks on the repository:
+```
+pre-commit run --all-files
+```
+
 ## License
 By contributing, you agree that your contributions will be licensed under the **Apache License 2.0**.
