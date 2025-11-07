@@ -21,24 +21,19 @@ pub fn collect_git_states(root: &Path) -> GitMap {
         .include_ignored(true)
         .recurse_untracked_dirs(true);
 
+    let index_mask = Status::INDEX_MODIFIED | Status::INDEX_NEW | Status::INDEX_RENAMED;
+
     if let Ok(statuses) = repo.statuses(Some(&mut opts)) {
         for entry in statuses.iter() {
             if let Some(path) = entry.path() {
                 let s = entry.status();
-                let state = if s.contains(Status::WT_MODIFIED) {
-                    GitState::Modified
-                } else if s
-                    .intersects(Status::INDEX_MODIFIED | Status::INDEX_NEW | Status::INDEX_RENAMED)
-                {
-                    GitState::Staged
-                } else if s.contains(Status::WT_NEW) {
-                    GitState::Untracked
-                } else if s.contains(Status::IGNORED) {
-                    GitState::Ignored
-                } else if s.contains(Status::WT_DELETED) {
-                    GitState::Deleted
-                } else {
-                    GitState::Clean
+                let state = match true {
+                    _ if s.contains(Status::WT_MODIFIED) => GitState::Modified,
+                    _ if s.intersects(index_mask) => GitState::Staged,
+                    _ if s.contains(Status::WT_NEW) => GitState::Untracked,
+                    _ if s.contains(Status::IGNORED) => GitState::Ignored,
+                    _ if s.contains(Status::WT_DELETED) => GitState::Deleted,
+                    _ => GitState::Clean,
                 };
                 map.insert(SmolStr::new(path), state);
             }
