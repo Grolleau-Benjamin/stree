@@ -40,7 +40,7 @@ pub struct Args {
     #[arg(long, short = 'G')]
     pub show_gitignored: bool,
 
-    /// Inlcude hidden files and directories (starting with .)
+    /// Include hidden files and directories (starting with .)
     #[arg(long, short = 'H')]
     pub show_hiddens: bool,
 

@@ -136,9 +136,9 @@ All CLI options are **planned**, but some are not yet implemented.
 | `--git` | `-g` | 🕓 | Display Git status indicators (modified, staged, untracked, etc.) |
 | `--git-branch` | `-b` | 🕓 | Show the current Git branch name next to the root |
 | `--json` | `-j` | ✅ | Output the tree as a JSON structure |
-| `--count` | `n` | ✅ | Print only the number of files and directories |
+| `--count` | `-n` | ✅ | Print only the number of files and directories |
 | `--time` | `-t` | ✅ | Measure and display execution time |
-| `--verbose` |`-v` | ✅ | Enable detailed logging |
+| `--verbose` | `-v` | ✅ | Enable detailed logging |
 
 ## 🤝 Contributing
 Contributions, issues, and feature requests are welcome!
