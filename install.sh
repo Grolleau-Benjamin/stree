@@ -22,6 +22,32 @@ case "$uname_m" in
   *) echo "Unsupported arch: $uname_m" >&2; exit 1;;
 esac
 
+if [[ "${1:-}" == "--uninstall" ]]; then
+  log "Starting uninstallation..."
+  remove_file() {
+    local path="$1"
+    if [ -f "$path" ]; then
+      rm -f "$path" && log "🗑️  Removed $path"
+    fi
+  }
+  for path in /usr/local/bin/$BIN /usr/bin/$BIN "$HOME/.local/bin/$BIN"; do
+    remove_file "$path"
+  done
+  for path in \
+    /usr/local/share/man/man1/${BIN}.1 \
+    /usr/share/man/man1/${BIN}.1 \
+    "$HOME/.local/share/man/man1/${BIN}.1"; do
+    remove_file "$path"
+  done
+  for path in \
+    "$HOME/.config/fish/completions/${BIN}.fish" \
+    /usr/share/fish/vendor_completions.d/${BIN}.fish; do
+    remove_file "$path"
+  done
+  log "✅ Uninstallation complete."
+  exit 0
+fi
+
 resolve_latest_tag() {
   local t
   t="$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
@@ -90,5 +116,34 @@ else
   install -m 0755 "$SRC" "$DEST/$BIN"
 fi
 
+install_man_and_completions() {
+  log "Installing manual and completions"
+  if [ "$uname_s" = "Darwin" ]; then
+    man_dir="/usr/local/share/man/man1"
+  else
+    man_dir="/usr/local/share/man/man1"
+  fi
+  mkdir -p "$man_dir" || true
+  if [ -w "$man_dir" ]; then
+    install -m 0644 docs/arbor.1 "$man_dir/" && \
+      log "✅ Installed man page to $man_dir/arbor.1"
+  else
+    user_man_dir="$HOME/.local/share/man/man1"
+    mkdir -p "$user_man_dir"
+    install -m 0644 docs/arbor.1 "$user_man_dir/"
+    log "📦 Installed man page to $user_man_dir (SIP-safe fallback)"
+    log "💡 Add to MANPATH if not visible: export MANPATH=\"$user_man_dir:\$MANPATH\""
+  fi
+  fish_dir="$HOME/.config/fish/completions"
+  if [ -f "completions/arbor.fish" ]; then
+    mkdir -p "$fish_dir"
+    install -m 0644 completions/arbor.fish "$fish_dir/"
+    log "✅ Installed Fish completions to $fish_dir/arbor.fish"
+  else
+    log "⚠️  No Fish completions found (completions/arbor.fish)"
+  fi
+}
+
+install_man_and_completions || true
 echo "✅ Installed: $DEST/$BIN"
-echo "Try: $BIN --version  |  $BIN --help"
+echo "Try: $BIN --version  |  $BIN --help  |  man $BIN"
