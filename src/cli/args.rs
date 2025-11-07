@@ -37,59 +37,59 @@ pub struct Args {
     // BASIC OPTIONS
     // -----------
     /// Show files that are listed in .gitignore (ignored by default)
-    #[arg(long)]
+    #[arg(long, short = 'G')]
     pub show_gitignored: bool,
 
     /// Inlcude hidden files and directories (starting with .)
-    #[arg(long)]
+    #[arg(long, short = 'H')]
     pub show_hiddens: bool,
 
     /// Colorize the output (Auto, Always, Never).
-    #[arg(long, value_enum, default_value_t = ColorMode::Auto)]
+    #[arg(long, short = 'c', value_enum, default_value_t = ColorMode::Auto)]
     pub color: ColorMode,
 
     /// Add icons for known file types and directories
-    #[arg(long)]
+    #[arg(long, short = 'i')]
     pub icons: bool,
 
     // ------------
     // TREE RENDERING
     // ------------
     /// Limit the displayed depth of the tree
-    #[arg(long, value_name = "N")]
+    #[arg(long, short = 'd', value_name = "N")]
     pub depth: Option<usize>,
 
     // -------------------
     // GIT INTEGRATION
     // -------------------
     /// Display Git status indicators (modified, staged, untracked, etc.)
-    #[arg(long)]
+    #[arg(long, short = 'g')]
     pub git: bool,
 
     /// Show the current branch name next to the root
-    #[arg(long)]
+    #[arg(long, short = 'b')]
     pub git_branch: bool,
 
     // -------------------
     // OUTPUT CONTROL
     // -------------------
     /// Output the tree as a JSON structure
-    #[arg(long)]
+    #[arg(long, short = 'j')]
     pub json: bool,
 
     /// Print only the number of files and directories
-    #[arg(long)]
+    #[arg(long, short = 'n')]
     pub count: bool,
 
     /// Measure and display execution time
-    #[arg(long)]
+    #[arg(long, short = 't')]
     pub time: bool,
 
     // -------------------
     // UTILITY
     // -------------------
     /// Enable detailed logging
-    #[arg(long)]
+    #[arg(long, short = 'v')]
     pub verbose: bool,
 
     /// Root directory to explore (default: current directory)
