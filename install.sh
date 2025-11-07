@@ -36,6 +36,7 @@ if [[ "${1:-}" == "--uninstall" ]]; then
   for path in \
     /usr/local/share/man/man1/${BIN}.1 \
     /usr/share/man/man1/${BIN}.1 \
+    /opt/homebrew/share/man/man1/${BIN}.1 \
     "$HOME/.local/share/man/man1/${BIN}.1"; do
     remove_file "$path"
   done
@@ -119,10 +120,16 @@ fi
 install_man_and_completions() {
   log "Installing manual and completions"
   if [ "$uname_s" = "Darwin" ]; then
-    man_dir="/usr/local/share/man/man1"
+    if [ -d "/opt/homebrew/share/man/man1" ]; then
+      man_dir="/opt/homebrew/share/man/man1"
+    else
+      man_dir="/usr/local/share/man/man1"
+    fi
   else
     man_dir="/usr/local/share/man/man1"
   fi
+
+
   mkdir -p "$man_dir" || true
   if [ -w "$man_dir" ]; then
     install -m 0644 docs/arbor.1 "$man_dir/" && \
@@ -135,12 +142,12 @@ install_man_and_completions() {
     log "💡 Add to MANPATH if not visible: export MANPATH=\"$user_man_dir:\$MANPATH\""
   fi
   fish_dir="$HOME/.config/fish/completions"
-  if [ -f "completions/arbor.fish" ]; then
+  if [ -f "docs/arbor.fish" ]; then
     mkdir -p "$fish_dir"
-    install -m 0644 completions/arbor.fish "$fish_dir/"
+    install -m 0644 docs/arbor.fish "$fish_dir/"
     log "✅ Installed Fish completions to $fish_dir/arbor.fish"
   else
-    log "⚠️  No Fish completions found (completions/arbor.fish)"
+    log "⚠️  No Fish completions found (docs/arbor.fish)"
   fi
 }
 
