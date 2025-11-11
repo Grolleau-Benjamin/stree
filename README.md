@@ -5,7 +5,9 @@ _by Benjamin Grolleau & Angelo Tunney_
 ![Status](https://img.shields.io/badge/status-in%20development-yellow)
 ![Version](https://img.shields.io/github/v/tag/Grolleau-Benjamin/arbor?label=version)
 
-<img src="./img/logo.jpg" alt="Logo" width="120" />
+<p align="center">
+  <img src="./img/logo.jpg" alt="Logo" width="120" />
+</p>
 
 Arbor is a modern and smart reimplementation of the traditional `tree` command. Its goal is to provide developers with a more intuitive and visually clear way to explore project structures. Unlike the classic version, Arbor introduces several improvements such as configurable depth levels for better readability, colorized output and added icons to distinguish files and directories at a glance, and automatic filtering of files or folders ignored by Git (based on the .gitignore file). It can also display the Git status of files, showing whether they are untracked, modified, staged for commit, or stashed. Arbor is written in Rust.
 
