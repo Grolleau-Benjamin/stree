@@ -20,8 +20,8 @@ Arbor is a modern and smart reimplementation of the traditional `tree` command. 
 ## 🚀 Quick start
 
 ```bash
-curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/v1.0.0-alpha/install.sh
-curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/v1.0.0-alpha/install.sh.sha256
+curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/main/install.sh
+curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/main/install.sh.sha256
 sha256sum -c install.sh.sha256 && bash install.sh
 ```
 
@@ -30,6 +30,19 @@ Then run:
 arbor -d 2 -c always -i
 # equivalent to
 arbor --depth 2 --color always --icons
+```
+
+### 🔐 Security
+The installation checksum file (`install.sh.sha256`) is GPG-signed, and the project owner’s public key is available for verification.
+You can verify the signature using the following commands:
+```
+curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/main/install.sh.sha256.sig
+curl -fsSLO https://raw.githubusercontent.com/Grolleau-Benjamin/arbor/main/public-key.asc
+gpg --import public-key.asc
+gpg --verify install.sh.sha256.sig install.sh.sha256
+
+# You should see :
+# gpg: Good signature from "Benjamin Grolleau (Arbor) <...>"
 ```
 
 ## 📘 Documentation
