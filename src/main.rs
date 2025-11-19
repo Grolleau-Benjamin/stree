@@ -5,7 +5,7 @@ use arbor::{
     cli::args,
     config::OutputFormat,
     fs_scan::walk,
-    git::{collect_git_states, enrich_with_git},
+    git::{collect_git_states, enrich_with_git, write_git_branch},
     helpers, logger,
     renderer::{count, json, stdout},
 };
@@ -43,6 +43,9 @@ fn main() {
                         let git_states = collect_git_states(&current_dir);
                         let mut buf = String::new();
                         enrich_with_git(&mut node, &git_states, &mut buf);
+                    }
+                    if config.git.show_branch {
+                        write_git_branch(&mut out, &current_dir);
                     }
                     match config.output {
                         OutputFormat::Json => json::render(&mut out, &node),
