@@ -12,13 +12,19 @@ use std::io::{self, Write};
 type NameFn<W> = fn(&mut W, &Node) -> io::Result<()>;
 
 pub fn render<W: Write>(mut w: W, root: &Node, opts: &RenderOptions) -> io::Result<()> {
-    let write_name: NameFn<W> = match (opts.icons, opts.color) {
-        (false, ColorMode::Never) => write_plain,
-        (false, ColorMode::Auto) => write_plain_gitonly,
-        (false, ColorMode::Always) => write_plain_full,
-        (true, ColorMode::Never) => write_icon_plain,
-        (true, ColorMode::Auto) => write_icon_gitonly,
-        (true, ColorMode::Always) => write_icon_full,
+    let write_name: NameFn<W> = match (opts.icons, opts.color, opts.git) {
+        (false, ColorMode::Never, false) => write_plain,
+        (false, ColorMode::Auto, false) => write_plain,
+        (false, ColorMode::Always, false) => write_plain_full,
+        (true, ColorMode::Never, false) => write_icon_plain,
+        (true, ColorMode::Auto, false) => write_icon_plain,
+        (true, ColorMode::Always, false) => write_icon_full,
+        (false, ColorMode::Never, true) => write_plain_git,
+        (false, ColorMode::Auto, true) => write_plain_gitonly,
+        (false, ColorMode::Always, true) => write_full_git,
+        (true, ColorMode::Never, true) => write_icon_plain_git,
+        (true, ColorMode::Auto, true) => write_icon_git,
+        (true, ColorMode::Always, true) => write_icon_full_git,
     };
     write_name(&mut w, root)?;
     w.write_all(b"\n")?;
@@ -63,20 +69,6 @@ fn write_plain<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
 }
 
 #[inline]
-fn write_plain_gitonly<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
-    w.write_all(n.name.as_bytes())?;
-    if n.is_dir() {
-        w.write_all(b"/")?;
-    }
-    if let Some((c, s)) = n.meta.git.and_then(colors::git_marker) {
-        w.write_all(c)?;
-        w.write_all(s)?;
-        w.write_all(colors::RESET)?;
-    }
-    Ok(())
-}
-
-#[inline]
 fn write_plain_full<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
     w.write_all(colors::color_for_name(&n.name, n.is_dir()))?;
     w.write_all(n.name.as_bytes())?;
@@ -84,11 +76,6 @@ fn write_plain_full<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
         w.write_all(b"/")?;
     }
     w.write_all(colors::RESET)?;
-    if let Some((c, s)) = n.meta.git.and_then(colors::git_marker) {
-        w.write_all(c)?;
-        w.write_all(s)?;
-        w.write_all(colors::RESET)?;
-    }
     Ok(())
 }
 
@@ -110,7 +97,90 @@ fn write_icon_plain<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
 }
 
 #[inline]
-fn write_icon_gitonly<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
+fn write_icon_plain_git<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
+    let icon = if n.is_dir() {
+        icons::dir_icon(&n.name)
+    } else {
+        icons::file_icon(&n.name)
+    };
+    let mut buf = [0u8; 4];
+    w.write_all(icon.encode_utf8(&mut buf).as_bytes())?;
+    w.write_all(b" ")?;
+    w.write_all(n.name.as_bytes())?;
+    if n.is_dir() {
+        w.write_all(b"/")?;
+    }
+    w.write_all(colors::RESET)?;
+    if let Some((_c, s)) = n.meta.git.and_then(colors::git_marker) {
+        w.write_all(s)?;
+        w.write_all(colors::RESET)?;
+    }
+    Ok(())
+}
+
+#[inline]
+fn write_icon_full<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
+    let icon = if n.is_dir() {
+        icons::dir_icon(&n.name)
+    } else {
+        icons::file_icon(&n.name)
+    };
+    let mut buf = [0u8; 4];
+    w.write_all(icon.encode_utf8(&mut buf).as_bytes())?;
+    w.write_all(b" ")?;
+    w.write_all(colors::color_for_name(&n.name, n.is_dir()))?;
+    w.write_all(n.name.as_bytes())?;
+    if n.is_dir() {
+        w.write_all(b"/")?;
+    }
+    w.write_all(colors::RESET)?;
+    Ok(())
+}
+
+#[inline]
+fn write_plain_git<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
+    w.write_all(n.name.as_bytes())?;
+    if n.is_dir() {
+        w.write_all(b"/")?;
+    }
+    if let Some((_c, s)) = n.meta.git.and_then(colors::git_marker) {
+        w.write_all(s)?;
+        w.write_all(colors::RESET)?;
+    }
+    Ok(())
+}
+#[inline]
+fn write_plain_gitonly<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
+    w.write_all(n.name.as_bytes())?;
+    if n.is_dir() {
+        w.write_all(b"/")?;
+    }
+    if let Some((c, s)) = n.meta.git.and_then(colors::git_marker) {
+        w.write_all(c)?;
+        w.write_all(s)?;
+        w.write_all(colors::RESET)?;
+    }
+    Ok(())
+}
+
+#[inline]
+fn write_full_git<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
+    w.write_all(colors::color_for_name(&n.name, n.is_dir()))?;
+    w.write_all(n.name.as_bytes())?;
+    if n.is_dir() {
+        w.write_all(b"/")?;
+    }
+    w.write_all(colors::RESET)?;
+    if let Some((c, s)) = n.meta.git.and_then(colors::git_marker) {
+        w.write_all(c)?;
+        w.write_all(s)?;
+        w.write_all(colors::RESET)?;
+    }
+    Ok(())
+}
+
+#[inline]
+fn write_icon_git<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
     let icon = if n.is_dir() {
         icons::dir_icon(&n.name)
     } else {
@@ -132,7 +202,7 @@ fn write_icon_gitonly<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
 }
 
 #[inline]
-fn write_icon_full<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
+fn write_icon_full_git<W: Write>(w: &mut W, n: &Node) -> io::Result<()> {
     let icon = if n.is_dir() {
         icons::dir_icon(&n.name)
     } else {
@@ -162,15 +232,15 @@ mod tests {
     use crate::config::RenderOptions;
     use crate::model::node::{GitState, Node};
 
-    fn opts(icons: bool, color: ColorMode) -> RenderOptions {
-        RenderOptions { icons, color }
+    fn opts(icons: bool, color: ColorMode, git: bool) -> RenderOptions {
+        RenderOptions { icons, color, git }
     }
 
     #[test]
     fn classic_single_dir() {
         let root = Node::new_dir("root", vec![]);
         let mut buf = Vec::new();
-        let o = opts(false, ColorMode::Never);
+        let o = opts(false, ColorMode::Never, false);
         render(&mut buf, &root, &o).unwrap();
         assert_eq!(String::from_utf8(buf).unwrap(), "root/\n");
     }
@@ -188,7 +258,7 @@ mod tests {
             ],
         );
         let mut buf = Vec::new();
-        let o = opts(false, ColorMode::Never);
+        let o = opts(false, ColorMode::Never, false);
         render(&mut buf, &root, &o).unwrap();
         let got = String::from_utf8(buf).unwrap();
         let expected = "\
@@ -205,7 +275,7 @@ root/
     fn icons_single_dir() {
         let root = Node::new_dir("root", vec![]);
         let mut buf = Vec::new();
-        let o = opts(true, ColorMode::Never);
+        let o = opts(true, ColorMode::Never, false);
         render(&mut buf, &root, &o).unwrap();
         let got = String::from_utf8(buf).unwrap();
         let expected = format!("{} root/\n", '\u{f115}');
@@ -225,7 +295,7 @@ root/
             ],
         );
         let mut buf = Vec::new();
-        let o = opts(true, ColorMode::Never);
+        let o = opts(true, ColorMode::Never, false);
         render(&mut buf, &root, &o).unwrap();
         let got = String::from_utf8(buf).unwrap();
         let expected = "\
@@ -243,7 +313,7 @@ root/
         let mut f = Node::new_file("a.txt", 1);
         f.meta.git = Some(GitState::Modified);
         let mut buf = Vec::new();
-        let o = opts(false, ColorMode::Auto);
+        let o = opts(false, ColorMode::Auto, true);
         render(&mut buf, &f, &o).unwrap();
         let s = String::from_utf8(buf).unwrap();
         assert!(s.starts_with("a.txt"));
@@ -254,7 +324,7 @@ root/
     fn auto_no_git_means_no_color() {
         let f = Node::new_file("a.txt", 1);
         let mut buf = Vec::new();
-        let o = opts(false, ColorMode::Auto);
+        let o = opts(false, ColorMode::Auto, false);
         render(&mut buf, &f, &o).unwrap();
         let s = String::from_utf8(buf).unwrap();
         assert_eq!(s, "a.txt\n");
@@ -265,7 +335,7 @@ root/
     fn always_colors_names() {
         let f = Node::new_file("a.txt", 1);
         let mut buf = Vec::new();
-        let o = opts(false, ColorMode::Always);
+        let o = opts(false, ColorMode::Always, false);
         render(&mut buf, &f, &o).unwrap();
         let s = String::from_utf8(buf).unwrap();
         assert!(s.contains('\u{1b}'));
@@ -275,7 +345,7 @@ root/
     fn always_colors_with_icons() {
         let f = Node::new_file("main.rs", 1);
         let mut buf = Vec::new();
-        let o = opts(true, ColorMode::Always);
+        let o = opts(true, ColorMode::Always, false);
         render(&mut buf, &f, &o).unwrap();
         let s = String::from_utf8(buf).unwrap();
         assert!(s.contains('\u{e7a8}'));

@@ -23,6 +23,7 @@ pub struct WalkOptions {
 pub struct RenderOptions {
     pub color: ColorMode,
     pub icons: bool,
+    pub git: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -75,6 +76,7 @@ impl AppConfig {
             render: RenderOptions {
                 color: raw.color,
                 icons: raw.icons,
+                git: raw.git,
             },
             git: GitOptions {
                 enabled: raw.git,

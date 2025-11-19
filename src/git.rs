@@ -5,6 +5,7 @@ use crate::model::node::{GitState, Node};
 use git2::{Repository, Status, StatusOptions};
 use smol_str::SmolStr;
 use std::collections::HashMap;
+use std::io::Write;
 use std::path::Path;
 
 pub type GitMap = HashMap<SmolStr, GitState>;
@@ -65,4 +66,22 @@ pub fn enrich_with_git(node: &mut Node, git: &GitMap, buf: &mut String) {
     }
 
     buf.truncate(keep);
+}
+
+pub fn write_git_branch(out: &mut impl Write, root: &std::path::Path) {
+    let Ok(repo) = Repository::discover(root) else {
+        return;
+    };
+
+    let Ok(head) = repo.head() else {
+        return;
+    };
+
+    let branch = if head.is_branch() {
+        head.shorthand().unwrap_or("unknown")
+    } else {
+        "HEAD"
+    };
+
+    let _ = writeln!(out, "(⎇ {branch})");
 }

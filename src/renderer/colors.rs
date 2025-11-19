@@ -49,13 +49,13 @@ pub fn color_for_name(name: &str, is_dir: bool) -> &'static [u8] {
 }
 
 const GIT_MARKERS: [(&[u8], &[u8]); 7] = [
-    (b"", b""),                      // Clean
-    (b"\x1b[33m", b" ~"),            // Modified
-    (b"\x1b[32m", b" +"),            // Staged
-    (b"\x1b[31m", b" ?"),            // Untracked
-    (b"\x1b[38;5;244m", b" (i)"),    // Ignored
-    (b"\x1b[36m", b" \xE2\x86\x92"), // Renamed →
-    (b"\x1b[31m", b" \xE2\x9C\x96"), // Deleted ✖
+    (b"", b""),                                      // Clean
+    (b"\x1b[33m", b" \x1b[1m~\x1b[0m"),              // Modified
+    (b"\x1b[32m", b" \x1b[1m+\x1b[0m"),              // Staged
+    (b"\x1b[31m", b" \x1b[1m?\x1b[0m"),              // Untracked
+    (b"\x1b[38;5;244m", b" \x1b[1m(i)Hello\x1b[0m"), // Ignored
+    (b"\x1b[36m", b" \x1b[1m\xE2\x86\x92\x1b[0m"),   // Renamed →
+    (b"\x1b[31m", b" \x1b[1m\xE2\x9C\x96\x1b[0m"),   // Deleted ✖
 ];
 
 #[inline]
