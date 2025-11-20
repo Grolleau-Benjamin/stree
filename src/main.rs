@@ -44,12 +44,14 @@ fn main() {
                         let mut buf = String::new();
                         enrich_with_git(&mut node, &git_states, &mut buf);
                     }
-                    if config.git.show_branch {
-                        write_git_branch(&mut out, &current_dir);
-                    }
                     match config.output {
                         OutputFormat::Json => json::render(&mut out, &node),
-                        OutputFormat::Tree => stdout::render(&mut out, &node, &config.render),
+                        OutputFormat::Tree => {
+                            if config.git.show_branch {
+                                write_git_branch(&mut out, &current_dir);
+                            }
+                            stdout::render(&mut out, &node, &config.render)
+                        }
                         _ => unreachable!(),
                     }
                 }
