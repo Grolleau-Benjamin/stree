@@ -9,7 +9,7 @@
   <a href="https://www.rust-lang.org">
     <img src="https://img.shields.io/badge/language-Rust-orange?logo=rust" alt="Rust">
   </a>
-  <img src="https://img.shields.io/badge/status-in%20development-yellow" alt="Status">
+  <img src="https://img.shields.io/badge/status-in%20prod-green" alt="Status">
   <img src="https://img.shields.io/github/v/tag/Grolleau-Benjamin/arbor?label=version" alt="Version">
 </p>
 
