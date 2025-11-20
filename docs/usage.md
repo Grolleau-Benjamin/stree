@@ -24,8 +24,8 @@ cargo run -- --depth 2 --color always --icons --git
 | `--color <Auto\|Always\|Never>` | `-c <>` | ✅ | Colorize the output (directories, files, others) |
 | `--icons` | `-i` | ✅ | Add icons for known file types and directories |
 | `--depth <N>` | `-d <N>` | ✅ | Limit the displayed depth of the tree |
-| `--git` | `-g` | 🕓 | Display Git status indicators (modified, staged, untracked, etc.) |
-| `--git-branch` | `-b` | 🕓 | Show the current Git branch name next to the root |
+| `--git` | `-g` | ✅ | Display Git status indicators (modified, staged, untracked, etc.) |
+| `--git-branch` | `-b` | ✅ | Show the current Git branch name next to the root |
 | `--json` | `-j` | ✅ | Output the tree as a JSON structure |
 | `--count` | `-n` | ✅ | Print only the number of files and directories |
 | `--time` | `-t` | ✅ | Measure and display execution time |

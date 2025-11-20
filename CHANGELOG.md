@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] — 2025-11-20
+
+> Note: This is the first stable release of Arbor. 🎉
+> After a month of development, restructuring, optimizations, and feature polishing, Arbor is now considered production-ready.
+
+### Added
+- `--git` flag to display Git status indicators for each file and directory
+- `--git-branch` flag to show the current Git branch at the top of the tree
+
 ## [1.0.0-alpha] — 2025-11-07
 ### Breaking Changes
 - **Project renamed** from `STree` → `Arbor`

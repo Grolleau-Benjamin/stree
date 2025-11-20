@@ -1,6 +1,6 @@
 [package]
 name = "arbor"
-version = "1.0.0-alpha"
+version = "1.0.0"
 edition = "2024"
 license = "Apache-2.0"
 authors = ["Benjamin Grolleau <benjamin.grolleau@outlook.com>", "Angelo Tunney <angelo.tny@hotmail.com>"]
